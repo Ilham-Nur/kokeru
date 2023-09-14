@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Kokeru</title>
+    <title>Data User Cleaning Service Sementara</title>
 </head>
 <body>
     <h2>{{ $details['title'] }}</h2>

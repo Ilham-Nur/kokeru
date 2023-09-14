@@ -28,7 +28,7 @@ class SendPassword extends Mailable
      */
     public function build()
     {
-        return $this->subject('Kokeru')
+        return $this->subject('Data User Cleaning Service Sementara')
                     ->view('manajer.send-password');
     }
 }

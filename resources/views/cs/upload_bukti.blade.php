@@ -48,18 +48,46 @@
               </div>
             </div>
             <div class="card-body">
+                @if(session('error'))
+                  <div class="alert alert-danger">
+                      {{ session('error') }}
+                  </div>
+                @endif
                 <form action="{{ route('cs.bukti.upload') }}" method="POST" enctype="multipart/form-data">
-                  @csrf
-                    <input type="hidden" name="id_lap" value="{{$last[0]->id}}">
+                  @csrf   
+                  @isset($last)
                     <input type="hidden" name="id_ruang" value="{{$id_ruang}}">
+                      @else
+                      <input type="hidden" name="id_lap" value="{{$last[0]->id}}">
+                      <input type="hidden" name="id_ruang" value="{{$id_ruang}}">
+                  @endisset
                     <p>Bukti Laporan</p>
                     @error('foto[]')
                 <small class="text-red">{{ $message }}</small>
                     @enderror
-                    <div class="custom-file mb-2">
+                    {{-- <div class="custom-file mb-2">
                         <input type="file" class="custom-file-input" name="bukti[]" id="bukti[]" lang="en" accept="image/png, image/jpg, image/jpeg, image/svg, video/mp4, video/mpeg, video/3gp, video/mkv" multiple>
                         <label class="custom-file-label" for="bukti[]">Select file</label>
+                    </div> --}}
+
+                    <div class="upload-multiple">
+                      <div class="input-group hdtuto control-group lst increment" >
+                        <input type="file" name="bukti[]" class="myfrm form-control" id="bukti[]" lang="en" accept="image/png, image/jpg, image/jpeg, image/svg, video/mp4, video/mpeg, video/3gp, video/mkv">
+                        <div class="input-group-btn"> 
+                          <button class="btn btn-success" type="button"><i class="fldemo glyphicon glyphicon-plus"></i>Add</button>
+                        </div>
+                      </div>
+                      <div class="clone hide">
+                        <div class="hdtuto control-group lst input-group" style="margin-top:10px">
+                          <input type="file" class="custom-file-input myfrm form-control" name="bukti[]" id="bukti[]" lang="en" accept="image/png, image/jpg, image/jpeg, image/svg, video/mp4, video/mpeg, video/3gp, video/mkv">
+                          
+                          <div class="input-group-btn"> 
+                            <button class="btn btn-danger" type="button"><i class="fldemo glyphicon glyphicon-remove"></i> Remove</button>
+                          </div>
+                        </div>
+                      </div>
                     </div>
+                    
                     <i><small>*Pilih foto dan video sekaligus, lalu klik Upload untuk menyimpan bukti laporan.</small>
                   <div class="text-center">
                     <input type="submit" name="submit" class="btn btn-primary mt-4" value="Upload">
@@ -71,4 +99,16 @@
         </div>
       </div>
     </div>
+
+    <script type="text/javascript">
+      $(document).ready(function() {
+        $(".btn-success").click(function(){ 
+            var lsthmtl = $(".clone").html();
+            $(".increment").after(lsthmtl);
+        });
+        $("body").on("click",".btn-danger",function(){ 
+            $(this).parents(".hdtuto").remove();
+        });
+      });
+  </script>
 @endsection

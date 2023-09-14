@@ -8,6 +8,7 @@
 <!-- bersih -->
 <div class="row">
       @foreach($laporan as $r)
+      {{-- {{ dd($r) }} --}}
           @if(isset($r->id_jadwal))
           <!-- bersih -->
           <div class="col-xl-2 col-md-3 col-sm-3 col-xs-6 pb-0">
