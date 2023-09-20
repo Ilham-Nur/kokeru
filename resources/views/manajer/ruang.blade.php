@@ -32,7 +32,7 @@
                             <div class="input-group-prepend">
                                 <span class="input-group-text"><i class="ni ni-bullet-list-67"></i></span>
                             </div>
-                            <input class="form-control" name="nama_ruang" placeholder="Nama Ruang (ex: R102)" type="text" required minlength="3" maxlength="5">
+                            <input class="form-control" name="nama_ruang" placeholder="Nama Ruang" type="text" required minlength="3" maxlength="5">
                         </div>
                     </div>
                     <div class="text-center">
