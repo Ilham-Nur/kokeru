@@ -10,6 +10,8 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Auth\LogoutController;
 use App\Http\Controllers\UploadBuktiController;
 use App\Http\Controllers\CS\DashboardController;
+use App\Http\Controllers\InventarisController;
+use App\Http\Controllers\PemeliharaanAcController;
 
 /*
 |--------------------------------------------------------------------------
@@ -44,6 +46,15 @@ Route::prefix('manajer')->middleware(['manajer'])->group(function (){
     Route::post('/laporan', [LaporanController::class, 'indexMan'])->name('manajer.laporan.index');
     Route::get('/profil', [ProfileController::class, 'index'])->name('manajer.profil');
     Route::patch('/profil', [ProfileController::class, 'store']);
+    Route::get('/inventaris', [InventarisController::class, 'index'])->name('inventaris.index');
+    Route::get('/inventaris/{id_ruang}/create', [InventarisController::class, 'create_inventaris_sarana'])->name('manager.inventaris..sarana.create');
+    Route::post('/inventaris/{id_ruang}/create', [InventarisController::class, 'store_inventaris_sarana'])->name('manager.inventaris..sarana.store');
+    Route::get('/inventaris/{id}/{id_ruang}/edit', [InventarisController::class, 'edit_inventaris_sarana'])->name('manager.inventaris..sarana.edit');
+    Route::put('/inventaris/{id}/{id_ruang}/edit', [InventarisController::class, 'update_inventaris_sarana'])->name('manager.inventaris..sarana.update');
+    Route::delete('/inventaris/{id}/destroy', [InventarisController::class, 'destroy_inventaris_sarana'])->name('manager.inventaris..sarana.destroy');
+    Route::get('/inventaris-sarana/{id_ruang}', [InventarisController::class, 'inventaris_sarana'])->name('inventaris.sarana');
+    Route::get('/pemeliharaan-ac/{id_ruang}', [PemeliharaanAcController::class, 'index'])->name('pemeliharaanAC.index');
+    Route::get('/inventaris/{id_ruang}/{bulan}', [InventarisController::class, 'inventaris_bulan'])->name('inventaris.bulan');
 });
 
 Route::resource('ruang', RuangController::class);
@@ -57,6 +68,14 @@ Route::prefix('cs')->middleware(['cs'])->group(function(){
     Route::get('/{id_ruang}/upload', [UploadBuktiController::class, 'index'])->name('cs.bukti');
     Route::post('/upload', [UploadBuktiController::class, 'store'])->name('cs.bukti.upload');
     Route::get('/profil', [ProfileController::class, 'index'])->name('cs.profil');
+    Route::get('/inventaris/show', [InventarisController::class, 'index_cs_inventaris'])->name('cs.inventaris.index');
+    Route::get('/inventaris-sarana/{id_ruang}', [InventarisController::class, 'cs_inventaris_sarana'])->name('cs.inventaris.sarana');
+    Route::get('/inventaris/{id_ruang}/create', [InventarisController::class, 'cs_create_inventaris_sarana'])->name('cs.inventaris..sarana.create');
+    Route::post('/inventaris/{id_ruang}/create', [InventarisController::class, 'cs_store_inventaris_sarana'])->name('cs.inventaris..sarana.store');
+    Route::get('/inventaris/{id}/{id_ruang}/edit', [InventarisController::class, 'cs_edit_inventaris_sarana'])->name('cs.inventaris..sarana.edit');
+    Route::put('/inventaris/{id}/{id_ruang}/edit', [InventarisController::class, 'cs_update_inventaris_sarana'])->name('cs.inventaris..sarana.update');
+    Route::delete('/inventaris/{id}/destroy', [InventarisController::class, 'cs_destroy_inventaris_sarana'])->name('cs.inventaris..sarana.destroy');
+    Route::get('/inventaris/{id_ruang}/{bulan}', [InventarisController::class, 'cs_inventaris_bulan'])->name('cs.inventaris.bulan');
 });
 Route::get('akun', [ProfileController::class, 'index'])->name('akun');
 Route::patch('/update-akun', [ProfileController::class, 'store'])->name('update-akun');

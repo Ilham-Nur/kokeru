@@ -49,6 +49,12 @@
                 <span class="nav-link-text">Home</span>
               </a>
             </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{{route('cs.inventaris.index')}}">
+                <i class="ni ni-building text-orange"></i>
+                <span class="nav-link-text">Inventaris</span>
+              </a>
+            </li>
             @endif
           </ul>
         </div>

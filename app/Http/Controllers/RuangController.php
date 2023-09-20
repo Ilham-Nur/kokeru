@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Ruang;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 class RuangController extends Controller
@@ -14,9 +15,14 @@ class RuangController extends Controller
      */
     public function index()
     {
+        $bulanList = [];
+        for ($i = 1; $i <= 12; $i++) {
+            $date = Carbon::create(null, $i, 1);
+            $bulanList[$i] = $date->format('F');
+        }
         $ruang = Ruang::get();
         $last = Ruang::select('id')->orderByDesc('id')->limit(1)->get();
-        return view('manajer.ruang', ['ruang' => $ruang, 'last' => $last]);
+        return view('manajer.ruang', ['ruang' => $ruang, 'last' => $last, 'bulanList' => $bulanList]);
     }
 
     /**

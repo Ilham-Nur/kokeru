@@ -95,7 +95,7 @@
                 }
             ?>
             <canvas id="myChart" style ="width:400; height:100%; position: relative;"></canvas>
-              {{-- <script>
+              <script>
               var ctx = document.getElementById('myChart').getContext('2d');
               var myChart = new Chart(ctx, {
                   type: 'bar',
@@ -137,7 +137,7 @@
                       }
                   }
               });
-              </script> --}}
+              </script>
             </div>
           </div>
         </div>
