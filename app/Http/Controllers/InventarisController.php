@@ -102,7 +102,7 @@ class InventarisController extends Controller
     {
         $ruang = Ruang::where('id', $id_ruang)->first();
         $sarana = InventarisSarana::where('ruang_id', $id_ruang)->latest()->get();
-
+        
         return view('cs.inventaris.inventaris_sarana', compact('id_ruang', 'ruang', 'sarana'));
     }
 
@@ -152,14 +152,5 @@ class InventarisController extends Controller
         $inventaris = InventarisSarana::where('id', $id)->first();
         $inventaris->delete();
         return redirect()->back();
-    }
-
-    public function cs_inventaris_bulan($id_ruang, $bulan)
-    {
-        $ruang = Ruang::where('id', $id_ruang)->first();
-        $tahun = Carbon::parse($ruang->created_at)->year;
-        $sarana = InventarisSarana::where('ruang_id', $id_ruang)->get();
-
-        return view('cs.inventaris.inventaris_bulan', compact('bulan', 'tahun', 'ruang', 'sarana'));
     }
 }

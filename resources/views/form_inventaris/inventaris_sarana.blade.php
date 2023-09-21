@@ -35,7 +35,7 @@
             @endif
         </div>
         <div>
-            <table class="table table-bordered table-responsive-sm">
+            <table class="table table-bordered table-responsive-sm" id="data">
                 <thead>
                     <tr class="text-center">
                         <th scope="col">NO</th>

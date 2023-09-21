@@ -11,6 +11,7 @@ use App\Http\Controllers\Auth\LogoutController;
 use App\Http\Controllers\UploadBuktiController;
 use App\Http\Controllers\CS\DashboardController;
 use App\Http\Controllers\InventarisController;
+use App\Http\Controllers\InventarisKondisiController;
 use App\Http\Controllers\PemeliharaanAcController;
 
 /*
@@ -75,7 +76,8 @@ Route::prefix('cs')->middleware(['cs'])->group(function(){
     Route::get('/inventaris/{id}/{id_ruang}/edit', [InventarisController::class, 'cs_edit_inventaris_sarana'])->name('cs.inventaris..sarana.edit');
     Route::put('/inventaris/{id}/{id_ruang}/edit', [InventarisController::class, 'cs_update_inventaris_sarana'])->name('cs.inventaris..sarana.update');
     Route::delete('/inventaris/{id}/destroy', [InventarisController::class, 'cs_destroy_inventaris_sarana'])->name('cs.inventaris..sarana.destroy');
-    Route::get('/inventaris/{id_ruang}/{bulan}', [InventarisController::class, 'cs_inventaris_bulan'])->name('cs.inventaris.bulan');
+    Route::get('/inventaris/{id_ruang}/{bulan}', [InventarisKondisiController::class, 'cs_index'])->name('cs.inventaris.bulan');
+    Route::post('/inventaris-kondisi/{id_sarana}/{bulan}', [InventarisKondisiController::class, 'cs_store'])->name('cs.inventaris.kondisi.store');
 });
 Route::get('akun', [ProfileController::class, 'index'])->name('akun');
 Route::patch('/update-akun', [ProfileController::class, 'store'])->name('update-akun');
