@@ -27,6 +27,8 @@ class LoginController extends Controller
             // if he's manajer
             if (auth()->user()->manajer){
                 return redirect()->route('manajer.dashboard');
+            }elseif(auth()->user()->mitra){
+                return redirect()->route('mitra.dashboard');
             }
             return redirect()->route('cs.dashboard');
         }

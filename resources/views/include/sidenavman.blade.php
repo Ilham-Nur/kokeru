@@ -31,6 +31,12 @@
               </a>
             </li>
             <li class="nav-item">
+              <a class="nav-link" href="{{route('manajer.mitraac.index')}}">
+                <i class="ni ni-atom text-primary"></i>
+                <span class="nav-link-text">Mitra AC</span>
+              </a>
+            </li>
+            <li class="nav-item">
               <a class="nav-link" href="{{route('manajer.jadwal.index')}}">
                 <i class="ni ni-calendar-grid-58 text-yellow"></i>
                 <span class="nav-link-text">Jadwal</span>
@@ -40,6 +46,13 @@
               <a class="nav-link" href="{{route('manajer.laporan.index')}}">
                 <i class="ni ni-collection text-info"></i>
                 <span class="nav-link-text">Laporan</span>
+              </a>
+            </li>
+            @elseif(auth()->user()->mitra==1)
+            <li class="nav-item">
+              <a class="nav-link" href="">
+                <i class="fas fa-home text-purple"></i>
+                <span class="nav-link-text">Home</span>
               </a>
             </li>
             @else

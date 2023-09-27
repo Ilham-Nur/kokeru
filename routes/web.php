@@ -12,6 +12,7 @@ use App\Http\Controllers\UploadBuktiController;
 use App\Http\Controllers\CS\DashboardController;
 use App\Http\Controllers\InventarisController;
 use App\Http\Controllers\InventarisKondisiController;
+use App\Http\Controllers\MitraAcController;
 use App\Http\Controllers\PemeliharaanAcController;
 
 /*
@@ -56,6 +57,11 @@ Route::prefix('manajer')->middleware(['manajer'])->group(function (){
     Route::get('/inventaris-sarana/{id_ruang}', [InventarisController::class, 'inventaris_sarana'])->name('inventaris.sarana');
     Route::get('/pemeliharaan-ac/{id_ruang}', [PemeliharaanAcController::class, 'index'])->name('pemeliharaanAC.index');
     Route::get('/inventaris/{id_ruang}/{bulan}', [InventarisController::class, 'inventaris_bulan'])->name('inventaris.bulan');
+    Route::get('/mitra-ac', [MitraAcController::class, 'index_manajer'])->name('manajer.mitraac.index');
+    Route::post('/mitra-ac', [MitraAcController::class, 'store'])->name('manajer.mitraac.store');
+    Route::put('/mitra-ac/{id_user}', [MitraAcController::class, 'update'])->name('manajer.mitraac.update');
+    Route::delete('/mitra-ac/{id_user}', [MitraAcController::class, 'destroy'])->name('manajer.mitraac.destroy');
+    // Route::resource('/mitra-ac', MitraAcController::class);
 });
 
 Route::resource('ruang', RuangController::class);
@@ -78,6 +84,11 @@ Route::prefix('cs')->middleware(['cs'])->group(function(){
     Route::delete('/inventaris/{id}/destroy', [InventarisController::class, 'cs_destroy_inventaris_sarana'])->name('cs.inventaris..sarana.destroy');
     Route::get('/inventaris/{id_ruang}/{bulan}', [InventarisKondisiController::class, 'cs_index'])->name('cs.inventaris.bulan');
     Route::post('/inventaris-kondisi/{id_sarana}/{bulan}', [InventarisKondisiController::class, 'cs_store'])->name('cs.inventaris.kondisi.store');
+});
+
+// Halaman Mitra
+Route::prefix('mitra')->middleware(['mitra'])->group(function(){
+    Route::get('/', [MitraAcController::class, 'index'])->name('mitra.dashboard');
 });
 Route::get('akun', [ProfileController::class, 'index'])->name('akun');
 Route::patch('/update-akun', [ProfileController::class, 'store'])->name('update-akun');

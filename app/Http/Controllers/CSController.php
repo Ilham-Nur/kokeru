@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Mail;
+
 
 class CSController extends Controller
 {
@@ -19,7 +19,7 @@ class CSController extends Controller
     public function index()
     {
         $cs = User::where('manajer', '=', 0)->get();
-        $last = User::select('id')->orderByDesc('id')->limit(1)->get();
+        $last = User::select('id')->orderByDesc('id')->limit(1)->latest()->get();
         return view('manajer.cs', ['cs' => $cs, 'last' => $last]);
       
     }
