@@ -34,7 +34,7 @@ Route::get('/logout', [LogoutController::class, 'store'])->name('auth.logout');
 
 // auth
 Route::get('/', [LoginController::class, 'index'])->middleware('guest')->name('auth.login');
-Route::post('/login', [LoginController::class, 'store']);
+Route::post('/login', [LoginController::class, 'store'])->name('auth.login');
 
 // halaman manajer
 Route::prefix('manajer')->middleware(['manajer'])->group(function (){
