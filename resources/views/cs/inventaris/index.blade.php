@@ -45,9 +45,6 @@
                                         data-target="#inventaris{{ $r->id }}">
                                         <i class="fas fa-wrench"></i>
                                     </button>
-                                    <a class="btn btn-sm btn-secondary"
-                                        href="{{ route('cs.inventaris.sarana', $r->id) }}"><i
-                                            class="fas fas fa-plus"></i></a>
                                 </td>
                        
                             </tr>

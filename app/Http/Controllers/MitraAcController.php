@@ -93,9 +93,8 @@ class MitraAcController extends Controller
          // waktu 
          Carbon::setLocale('id');
          $time = Carbon::now()->formatLocalized("%A, %d %B %Y");
-         
-        $ruang = Ruang::latest()->get();
-
-         return view('mitraAc.dashboard', compact('time','ruang'));
+         $count = Ruang::count();
+         $ruang = Ruang::latest()->get();
+         return view('mitraAc.dashboard',['count' => $count, 'ruang' => $ruang, 'time' => $time,]);
     }
 }
