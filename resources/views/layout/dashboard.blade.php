@@ -8,7 +8,7 @@
   <!-- Main content -->
   <div class="main-content" id="panel">
     <!-- Topnav -->
-    <nav class="navbar navbar-top navbar-expand navbar-dark bg-primary border-bottom">
+    <nav class="navbar navbar-top navbar-expand navbar-dark bg-success border-bottom">
       <div class="container-fluid">
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
           <!-- Navbar links -->
@@ -29,7 +29,7 @@
     </nav>
 
     <!-- Header -->
-    <div class="header bg-primary pb-6">
+    <div class="header bg-success pb-6">
       <div class="container-fluid">
         <div class="header-body">
           <div class="row align-items-center py-4">

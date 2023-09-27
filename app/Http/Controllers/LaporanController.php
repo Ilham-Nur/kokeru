@@ -173,7 +173,18 @@ class LaporanController extends Controller
             $chart = DB::select("SELECT CAST(laporan.created_at AS DATE) AS label, 
                 COUNT(laporan.id_jadwal) as frec FROM laporan where laporan.created_at BETWEEN '$seven' and '$last' GROUP BY 
                 CAST(laporan.created_at AS DATE) ORDER BY label");
-            return view('manajer.dashboard', ['ruang' => $ruang, 'user' => $user, 'bersih' => $bersih[0]->jum, 'kotor' => $kotor, 'chart' => $chart]);
+
+            $date = date('Y-m-d');
+            //$date = '2020-12-15';
+            $count = Ruang::count();
+            $laporan = DB::select("SELECT lap.id, lap.id_jadwal, ruang.id AS id_ruang, ruang.nama_ruang, lap.created_at, users.nama_user 
+                FROM ruang LEFT JOIN jadwal ON ruang.id = jadwal.id_ruang
+                LEFT JOIN (SELECT * FROM laporan WHERE laporan.created_at LIKE '$date%') AS lap ON lap.id_jadwal = jadwal.id
+                LEFT JOIN users ON users.id = jadwal.id_user");
+            $bukti = DB::select("SELECT * FROM bukti WHERE created_at LIKE '$date%'");
+            // return view('pages.home', ['laporan' => $laporan, 'count' => $count, 'bukti' => $bukti]);
+
+            return view('manajer.dashboard', ['ruang' => $ruang, 'user' => $user, 'bersih' => $bersih[0]->jum, 'kotor' => $kotor, 'chart' => $chart, 'laporan' => $laporan, 'count' => $count, 'bukti' => $bukti]);
         }
 
     }
