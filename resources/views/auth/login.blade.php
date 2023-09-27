@@ -30,14 +30,14 @@
         </div>
         <hr class="d-lg-none" />
         <ul class="navbar-nav align-items-lg-center ml-lg-auto">
-          <li class="nav-item d-none d-lg-block ml-lg-4">
+          {{-- <li class="nav-item d-none d-lg-block ml-lg-4">
             <a href="{{route('pages.home')}}" class="btn btn-neutral btn-icon">
               <span class="btn-inner--icon">
                 <i class="fas fa-newspaper mr-2"></i>
               </span>
               <span class="nav-link-inner--text">Home</span>
             </a>
-          </li>
+          </li> --}}
         </ul>
       </div>
     </div>
@@ -45,7 +45,7 @@
   <!-- Main content -->
   <div class="main-content">
     <!-- Header -->
-    <div class="header bg-gradient-primary py-7 py-lg-8 pt-lg-5">
+    <div class="header bg-gradient-success py-7 py-lg-8 pt-lg-5">
       <div class="separator separator-bottom separator-skew zindex-100">
         <svg x="0" y="0" viewBox="0 0 2560 100" preserveAspectRatio="none" version="1.1" xmlns="http://www.w3.org/2000/svg">
           <polygon class="fill-default" points="2560 0 2560 100 0 100"></polygon>
