@@ -76,12 +76,12 @@ Route::prefix('cs')->middleware(['cs'])->group(function(){
     Route::post('/upload', [UploadBuktiController::class, 'store'])->name('cs.bukti.upload');
     Route::get('/profil', [ProfileController::class, 'index'])->name('cs.profil');
     Route::get('/inventaris/show', [InventarisController::class, 'index_cs_inventaris'])->name('cs.inventaris.index');
-    // Route::get('/inventaris-sarana/{id_ruang}', [InventarisController::class, 'cs_inventaris_sarana'])->name('cs.inventaris.sarana');
-    // Route::get('/inventaris/{id_ruang}/create', [InventarisController::class, 'cs_create_inventaris_sarana'])->name('cs.inventaris..sarana.create');
-    // Route::post('/inventaris/{id_ruang}/create', [InventarisController::class, 'cs_store_inventaris_sarana'])->name('cs.inventaris..sarana.store');
-    // Route::get('/inventaris/{id}/{id_ruang}/edit', [InventarisController::class, 'cs_edit_inventaris_sarana'])->name('cs.inventaris..sarana.edit');
-    // Route::put('/inventaris/{id}/{id_ruang}/edit', [InventarisController::class, 'cs_update_inventaris_sarana'])->name('cs.inventaris..sarana.update');
-    // Route::delete('/inventaris/{id}/destroy', [InventarisController::class, 'cs_destroy_inventaris_sarana'])->name('cs.inventaris..sarana.destroy');
+    Route::get('/inventaris-sarana/{id_ruang}', [InventarisController::class, 'cs_inventaris_sarana'])->name('cs.inventaris.sarana');
+    Route::get('/inventaris/{id_ruang}/create', [InventarisController::class, 'cs_create_inventaris_sarana'])->name('cs.inventaris..sarana.create');
+    Route::post('/inventaris/{id_ruang}/create', [InventarisController::class, 'cs_store_inventaris_sarana'])->name('cs.inventaris..sarana.store');
+    Route::get('/inventaris/{id}/{id_ruang}/edit', [InventarisController::class, 'cs_edit_inventaris_sarana'])->name('cs.inventaris..sarana.edit');
+    Route::put('/inventaris/{id}/{id_ruang}/edit', [InventarisController::class, 'cs_update_inventaris_sarana'])->name('cs.inventaris..sarana.update');
+    Route::delete('/inventaris/{id}/destroy', [InventarisController::class, 'cs_destroy_inventaris_sarana'])->name('cs.inventaris..sarana.destroy');
     Route::get('/inventaris/{id_ruang}/{bulan}', [InventarisKondisiController::class, 'cs_index'])->name('cs.inventaris.bulan');
     Route::post('/inventaris-kondisi/{id_sarana}/{bulan}', [InventarisKondisiController::class, 'cs_store'])->name('cs.inventaris.kondisi.store');
 });
