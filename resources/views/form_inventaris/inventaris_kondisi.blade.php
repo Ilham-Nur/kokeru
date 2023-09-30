@@ -124,195 +124,212 @@
                                     </button>
                                 </div>
                                 <div class="modal-body">
+                                    {{-- {{ dd(Auth::user()->manajer) }} --}}
+                                    @if (Auth::user()->manajer === 1 )
                                     <form
                                         action="{{ route('manajer.inventaris.kondisi.store', ['id_sarana' => $item->id, 'bulan' => $bulan]) }}"
                                         method="POST" enctype="multipart/form-data">
-                                        @csrf
-                                        {{-- {{ $item->inventarisKondisi === $bulanAngka }} --}}
-                                        <div class="form-group row">
-                                            <label for="id_sarana" class="col-sm-4 font-weight-bold col-form-label">Nama
-                                                Sarana</label>
-                                            <div class="col-sm-8">
-                                                <input type="text" name="id_sarana" class="form-control border-none"
-                                                    id="id_sarana" value="{{ $item->nama_sarana }}" readonly>
+                                        @else
+                                        <form
+                                            action="{{ route('cs.inventaris.kondisi.store', ['id_sarana' => $item->id, 'bulan' => $bulan]) }}"
+                                            method="POST" enctype="multipart/form-data">
+                                            @endif
+                                            @csrf
+                                            {{-- {{ $item->inventarisKondisi === $bulanAngka }} --}}
+                                            <div class="form-group row">
+                                                <label for="id_sarana"
+                                                    class="col-sm-4 font-weight-bold col-form-label">Nama
+                                                    Sarana</label>
+                                                <div class="col-sm-8">
+                                                    <input type="text" name="id_sarana" class="form-control border-none"
+                                                        id="id_sarana" value="{{ $item->nama_sarana }}" readonly>
+                                                </div>
                                             </div>
-                                        </div>
-                                        <fieldset class="form-group row">
-                                            <legend class="col-form-label col-sm-4 font-weight-bold float-sm-left pt-0">
-                                                Kuantiti
-                                            </legend>
-                                            <div class="col-sm-8">
-                                                <div class="form-check">
-                                                    {{-- {{ dd( $kondisi->kuantiti) }} --}}
+                                            <fieldset class="form-group row">
+                                                <legend
+                                                    class="col-form-label col-sm-4 font-weight-bold float-sm-left pt-0">
+                                                    Kuantiti
+                                                </legend>
+                                                <div class="col-sm-8">
+                                                    <div class="form-check">
+                                                        {{-- {{ dd( $kondisi->kuantiti) }} --}}
 
-                                                    <input class="form-check-input" type="radio" name="kuantiti"
-                                                        id="kuantiti_ya{{ $item->id }}" value="1"
-                                                        @isset($kondisi->kuantiti)
-                                                    {{($kondisi->kuantiti === 1) ? 'checked' : '' }}
-                                                    @endisset
-                                                    >
-                                                    <label class="form-check-label{{ $item->id }}"
-                                                        for="kuantiti_ya{{ $item->id }}">
-                                                        Ya
-                                                    </label>
+                                                        <input class="form-check-input" type="radio" name="kuantiti"
+                                                            id="kuantiti_ya{{ $item->id }}" value="1"
+                                                            @isset($kondisi->kuantiti)
+                                                        {{($kondisi->kuantiti === 1) ? 'checked' : '' }}
+                                                        @endisset
+                                                        >
+                                                        <label class="form-check-label{{ $item->id }}"
+                                                            for="kuantiti_ya{{ $item->id }}">
+                                                            Ya
+                                                        </label>
+                                                    </div>
+                                                    <div class="form-check">
+                                                        <input class="form-check-input" type="radio" name="kuantiti"
+                                                            id="kuantiti_tidak{{ $item->id }}" value="0"
+                                                            @isset($kondisi) {{ ($kondisi->kuantiti === 0) ? 'checked' :
+                                                        '' }}
+                                                        @endisset
+                                                        >
+                                                        <label class="form-check-label"
+                                                            for="kuantiti_tidak{{ $item->id }}">
+                                                            Tidak
+                                                        </label>
+                                                    </div>
                                                 </div>
-                                                <div class="form-check">
-                                                    <input class="form-check-input" type="radio" name="kuantiti"
-                                                        id="kuantiti_tidak{{ $item->id }}" value="0" @isset($kondisi) {{
-                                                        ($kondisi->kuantiti === 0) ? 'checked' : '' }}
-                                                    @endisset
-                                                    >
-                                                    <label class="form-check-label" for="kuantiti_tidak{{ $item->id }}">
-                                                        Tidak
-                                                    </label>
-                                                </div>
-                                            </div>
-                                        </fieldset>
+                                            </fieldset>
 
-                                        <fieldset class="form-group row">
-                                            <legend class="col-form-label col-sm-4 font-weight-bold float-sm-left pt-0">
-                                                Kondisi
-                                            </legend>
-                                            <div class="col-sm-8">
-                                                <div class="form-check">
-                                                    <input class="form-check-input" type="radio" name="kondisi"
-                                                        id="kondisi_ya{{ $item->id }}" value="1" @isset($kondisi) {{
-                                                        ($kondisi->kondisi === 1) ? 'checked' : '' }}
-                                                    @endisset
-                                                    >
-                                                    <label class="form-check-label" for="kondisi_ya{{ $item->id }}">
-                                                        Ya
-                                                    </label>
+                                            <fieldset class="form-group row">
+                                                <legend
+                                                    class="col-form-label col-sm-4 font-weight-bold float-sm-left pt-0">
+                                                    Kondisi
+                                                </legend>
+                                                <div class="col-sm-8">
+                                                    <div class="form-check">
+                                                        <input class="form-check-input" type="radio" name="kondisi"
+                                                            id="kondisi_ya{{ $item->id }}" value="1" @isset($kondisi) {{
+                                                            ($kondisi->kondisi === 1) ? 'checked' : '' }}
+                                                        @endisset
+                                                        >
+                                                        <label class="form-check-label" for="kondisi_ya{{ $item->id }}">
+                                                            Ya
+                                                        </label>
+                                                    </div>
+                                                    <div class="form-check">
+                                                        <input class="form-check-input" type="radio" name="kondisi"
+                                                            id="kondisi_tidak{{ $item->id }}" value="0" @isset($kondisi)
+                                                            {{ ($kondisi->kondisi === 0) ? 'checked' : '' }}
+                                                        @endisset
+                                                        >
+                                                        <label class="form-check-label"
+                                                            for="kondisi_tidak{{ $item->id }}">
+                                                            Tidak
+                                                        </label>
+                                                    </div>
                                                 </div>
-                                                <div class="form-check">
-                                                    <input class="form-check-input" type="radio" name="kondisi"
-                                                        id="kondisi_tidak{{ $item->id }}" value="0" @isset($kondisi) {{
-                                                        ($kondisi->kondisi === 0) ? 'checked' : '' }}
-                                                    @endisset
-                                                    >
-                                                    <label class="form-check-label" for="kondisi_tidak{{ $item->id }}">
-                                                        Tidak
-                                                    </label>
+                                            </fieldset>
+                                            <fieldset class="form-group row">
+                                                <legend
+                                                    class="col-form-label col-sm-4 font-weight-bold float-sm-left pt-0">
+                                                    Dipinjam
+                                                </legend>
+                                                <div class="col-sm-8">
+                                                    <div class="form-check">
+                                                        <input class="form-check-input" type="radio" name="dipinjam"
+                                                            id="dipinjam_ya{{ $item->id }}" value="1" @isset($kondisi)
+                                                            {{ ($kondisi->dipinjam === 1) ? 'checked' : '' }}
+                                                        @endisset
+                                                        >
+                                                        <label class="form-check-label"
+                                                            for="dipinjam_ya{{ $item->id }}">
+                                                            Ya
+                                                        </label>
+                                                    </div>
+                                                    <div class="form-check">
+                                                        <input class="form-check-input" type="radio" name="dipinjam"
+                                                            id="dipinjam_tidak{{ $item->id }}" value="0"
+                                                            @isset($kondisi) {{ ($kondisi->dipinjam === 0) ? 'checked' :
+                                                        '' }}
+                                                        @endisset
+                                                        >
+                                                        <label class="form-check-label"
+                                                            for="dipinjam_tidak{{ $item->id }}">
+                                                            Tidak
+                                                        </label>
+                                                    </div>
                                                 </div>
+                                            </fieldset>
+                                            <fieldset class="form-group row">
+                                                <legend
+                                                    class="col-form-label col-sm-4 font-weight-bold float-sm-left pt-0">
+                                                    Mutasi
+                                                </legend>
+                                                <div class="col-sm-8">
+                                                    <div class="form-check">
+                                                        <input class="form-check-input" type="radio" name="mutasi"
+                                                            id="mutasi_ya{{ $item->id }}" value="1" @isset($kondisi) {{
+                                                            ($kondisi->mutasi === 1) ? 'checked' : '' }}
+                                                        @endisset
+                                                        >
+                                                        <label class="form-check-label" for="mutasi_ya{{ $item->id }}">
+                                                            Ya
+                                                        </label>
+                                                    </div>
+                                                    <div class="form-check">
+                                                        <input class="form-check-input" type="radio" name="mutasi"
+                                                            id="mutasi_tidak{{ $item->id }}" value="0" @isset($kondisi)
+                                                            {{ ($kondisi->mutasi === 0) ? 'checked' : '' }}
+                                                        @endisset
+                                                        >
+                                                        <label class="form-check-label"
+                                                            for="mutasi_tidak{{ $item->id }}">
+                                                            Tidak
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                            </fieldset>
+                                            <fieldset class="form-group row">
+                                                <legend
+                                                    class="col-form-label col-sm-4 font-weight-bold float-sm-left pt-0">
+                                                    User</legend>
+                                                <div class="col-sm-8">
+                                                    <div class="form-check">
+                                                        <input class="form-check-input" type="radio" name="user"
+                                                            id="user_ya{{ $item->id }}" value="1" @isset($kondisi) {{
+                                                            ($kondisi->user === 1) ? 'checked' : '' }}
+                                                        @endisset
+                                                        >
+                                                        <label class="form-check-label" for="user_ya{{ $item->id }}">
+                                                            Ya
+                                                        </label>
+                                                    </div>
+                                                    <div class="form-check">
+                                                        <input class="form-check-input" type="radio" name="user"
+                                                            id="user_tidak{{ $item->id }}" value="0" @isset($kondisi) {{
+                                                            ($kondisi->user === 0) ? 'checked' : '' }}
+                                                        @endisset
+                                                        >
+                                                        <label class="form-check-label" for="user_tidak{{ $item->id }}">
+                                                            Tidak
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                            </fieldset>
+                                            <fieldset class="form-group row">
+                                                <legend
+                                                    class="col-form-label col-sm-4 font-weight-bold float-sm-left pt-0">
+                                                    Sign</legend>
+                                                <div class="col-sm-8">
+                                                    <div class="form-check">
+                                                        <input class="form-check-input" type="radio" name="sign"
+                                                            id="sign_ya{{ $item->id }}" value="1" @isset($kondisi) {{
+                                                            ($kondisi->sign === 1) ? 'checked' : '' }}
+                                                        @endisset
+                                                        >
+                                                        <label class="form-check-label" for="sign_ya{{ $item->id }}">
+                                                            Ya
+                                                        </label>
+                                                    </div>
+                                                    <div class="form-check">
+                                                        <input class="form-check-input" type="radio" name="sign"
+                                                            id="sign_tidak{{ $item->id }}" value="0" @isset($kondisi) {{
+                                                            ($kondisi->sign === 0) ? 'checked' : '' }}
+                                                        @endisset
+                                                        >
+                                                        <label class="form-check-label" for="sign_tidak{{ $item->id }}">
+                                                            Tidak
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                            </fieldset>
+                                            <div class="border-top border-bold border-dark mb-2"></div>
+                                            <div class="d-flex justify-content-center ">
+                                                <button type="button" class="btn btn-warning"
+                                                    data-dismiss="modal">Tutup</button>
+                                                <button type="submit" class="btn btn-success">Simpan</button>
                                             </div>
-                                        </fieldset>
-                                        <fieldset class="form-group row">
-                                            <legend class="col-form-label col-sm-4 font-weight-bold float-sm-left pt-0">
-                                                Dipinjam
-                                            </legend>
-                                            <div class="col-sm-8">
-                                                <div class="form-check">
-                                                    <input class="form-check-input" type="radio" name="dipinjam"
-                                                        id="dipinjam_ya{{ $item->id }}" value="1" @isset($kondisi) {{
-                                                        ($kondisi->dipinjam === 1) ? 'checked' : '' }}
-                                                    @endisset
-                                                    >
-                                                    <label class="form-check-label" for="dipinjam_ya{{ $item->id }}">
-                                                        Ya
-                                                    </label>
-                                                </div>
-                                                <div class="form-check">
-                                                    <input class="form-check-input" type="radio" name="dipinjam"
-                                                        id="dipinjam_tidak{{ $item->id }}" value="0" @isset($kondisi) {{
-                                                        ($kondisi->dipinjam === 0) ? 'checked' : '' }}
-                                                    @endisset
-                                                    >
-                                                    <label class="form-check-label" for="dipinjam_tidak{{ $item->id }}">
-                                                        Tidak
-                                                    </label>
-                                                </div>
-                                            </div>
-                                        </fieldset>
-                                        <fieldset class="form-group row">
-                                            <legend class="col-form-label col-sm-4 font-weight-bold float-sm-left pt-0">
-                                                Mutasi
-                                            </legend>
-                                            <div class="col-sm-8">
-                                                <div class="form-check">
-                                                    <input class="form-check-input" type="radio" name="mutasi"
-                                                        id="mutasi_ya{{ $item->id }}" value="1" @isset($kondisi) {{
-                                                        ($kondisi->mutasi === 1) ? 'checked' : '' }}
-                                                    @endisset
-                                                    >
-                                                    <label class="form-check-label" for="mutasi_ya{{ $item->id }}">
-                                                        Ya
-                                                    </label>
-                                                </div>
-                                                <div class="form-check">
-                                                    <input class="form-check-input" type="radio" name="mutasi"
-                                                        id="mutasi_tidak{{ $item->id }}" value="0" @isset($kondisi) {{
-                                                        ($kondisi->mutasi === 0) ? 'checked' : '' }}
-                                                    @endisset
-                                                    >
-                                                    <label class="form-check-label" for="mutasi_tidak{{ $item->id }}">
-                                                        Tidak
-                                                    </label>
-                                                </div>
-                                            </div>
-                                        </fieldset>
-                                        <fieldset class="form-group row">
-                                            <legend class="col-form-label col-sm-4 font-weight-bold float-sm-left pt-0">
-                                                User</legend>
-                                            <div class="col-sm-8">
-                                                <div class="form-check">
-                                                    <input class="form-check-input" type="radio" name="user"
-                                                        id="user_ya{{ $item->id }}" value="1"
-                                                        @isset($kondisi)                                       
-                                                    {{ ($kondisi->user === 1) ? 'checked' : '' }}
-                                                    @endisset
-                                                    >
-                                                    <label class="form-check-label" for="user_ya{{ $item->id }}">
-                                                        Ya
-                                                    </label>
-                                                </div>
-                                                <div class="form-check">
-                                                    <input class="form-check-input" type="radio" name="user"
-                                                        id="user_tidak{{ $item->id }}" value="0"
-                                                        @isset($kondisi)
-                                                    {{ ($kondisi->user === 0) ? 'checked' : '' }}
-                                                    @endisset
-                                                    >
-                                                    <label class="form-check-label" for="user_tidak{{ $item->id }}">
-                                                        Tidak
-                                                    </label>
-                                                </div>
-                                            </div>
-                                        </fieldset>
-                                        <fieldset class="form-group row">
-                                            <legend class="col-form-label col-sm-4 font-weight-bold float-sm-left pt-0">
-                                                Sign</legend>
-                                            <div class="col-sm-8">
-                                                <div class="form-check">
-                                                    <input class="form-check-input" type="radio" name="sign"
-                                                        id="sign_ya{{ $item->id }}" value="1"
-                                                        @isset($kondisi)
-                                                    {{ ($kondisi->sign === 1) ? 'checked' : '' }}
-                                                    @endisset
-                                                    >
-                                                    <label class="form-check-label" for="sign_ya{{ $item->id }}">
-                                                        Ya
-                                                    </label>
-                                                </div>
-                                                <div class="form-check">
-                                                    <input class="form-check-input" type="radio" name="sign"
-                                                        id="sign_tidak{{ $item->id }}" value="0"
-                                                        @isset($kondisi)
-                                                    {{ ($kondisi->sign === 0) ? 'checked' : '' }}
-                                                    @endisset
-                                                    >
-                                                    <label class="form-check-label" for="sign_tidak{{ $item->id }}">
-                                                        Tidak
-                                                    </label>
-                                                </div>
-                                            </div>
-                                        </fieldset>
-                                        <div class="border-top border-bold border-dark mb-2"></div>
-                                        <div class="d-flex justify-content-center ">
-                                            <button type="button" class="btn btn-warning"
-                                                data-dismiss="modal">Tutup</button>
-                                            <button type="submit" class="btn btn-success">Simpan</button>
-                                        </div>
-                                    </form>
+                                        </form>
 
                                 </div>
 

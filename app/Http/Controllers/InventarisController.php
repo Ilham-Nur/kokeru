@@ -27,28 +27,10 @@ class InventarisController extends Controller
         $tahun = Carbon::parse($ruang->created_at)->year;
         $sarana = InventarisSarana::where('ruang_id', $id_ruang)->get();
         // $saranas = InventarisSarana::with('inventarisKondisis')->where('ruang_id', $id_ruang)->get();
-        
-
-        $inventaris = InventarisSarana::where('ruang_id', $id_ruang)->join('inventaris_kondisis', 'inventaris_saranas.id', '=', 'inventaris_kondisis.inventaris_sarana_id')
-        // ->where('inventaris_saranas.ruang_id', $id_ruang)
-        // ->where('inventaris_saranas.ruang_id', $id_ruang)
-        // ->where('inventaris_kondisis.bulan', $bulanAngka)
-        ->select(
-            'inventaris_saranas.id',
-            'inventaris_saranas.kode',
-            'inventaris_saranas.nama_sarana',
-            'inventaris_kondisis.kuantiti',
-            'inventaris_kondisis.bulan',
-            'inventaris_kondisis.dipinjam'
-        )
-       ->get();
-        // dd($saranas);
-
 
         $saranas = InventarisSarana::with(['inventarisKondisis' => function($query) use ($bulanAngka) {
             $query->where('bulan', $bulanAngka);
         }])->where('ruang_id', $id_ruang)->get();
-        // dd($saranas);
 
         return view('manajer.inventaris.inventaris_bulan', compact('id_ruang', 'bulan', 'tahun', 'ruang', 'sarana','saranas', 'bulanAngka'));
     }
