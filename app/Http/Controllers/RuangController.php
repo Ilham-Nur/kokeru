@@ -19,9 +19,12 @@ class RuangController extends Controller
         for ($i = 1; $i <= 12; $i++) {
             $date = Carbon::create(null, $i, 1);
             $bulanList[$i] = $date->format('F');
+            
         }
         $ruang = Ruang::get();
         $last = Ruang::select('id')->orderByDesc('id')->limit(1)->get();
+
+       
         return view('manajer.ruang', ['ruang' => $ruang, 'last' => $last, 'bulanList' => $bulanList]);
     }
 

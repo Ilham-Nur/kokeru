@@ -57,6 +57,7 @@ Route::prefix('manajer')->middleware(['manajer'])->group(function (){
     Route::get('/inventaris-sarana/{id_ruang}', [InventarisController::class, 'inventaris_sarana'])->name('inventaris.sarana');
     Route::get('/pemeliharaan-ac/{id_ruang}', [PemeliharaanAcController::class, 'index'])->name('pemeliharaanAC.index');
     Route::get('/inventaris/{id_ruang}/{bulan}', [InventarisController::class, 'inventaris_bulan'])->name('inventaris.bulan');
+    Route::post('/inventaris-kondisi/{id_sarana}/{bulan}', [InventarisKondisiController::class, 'manajer_store'])->name('manajer.inventaris.kondisi.store');
     Route::get('/mitra-ac', [MitraAcController::class, 'index_manajer'])->name('manajer.mitraac.index');
     Route::post('/mitra-ac', [MitraAcController::class, 'store'])->name('manajer.mitraac.store');
     Route::put('/mitra-ac/{id_user}', [MitraAcController::class, 'update'])->name('manajer.mitraac.update');

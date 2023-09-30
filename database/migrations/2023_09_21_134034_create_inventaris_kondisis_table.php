@@ -16,6 +16,7 @@ class CreateInventarisKondisisTable extends Migration
         Schema::create('inventaris_kondisis', function (Blueprint $table) {
             $table->id();
             $table->foreignId('inventaris_sarana_id')->constrained('inventaris_saranas')->cascadeOnDelete()->cascadeOnUpdate();
+            // $table->foreignId('ruang_id')->constrained('ruang')->cascadeOnDelete()->cascadeOnUpdate();
             $table->integer('bulan');
             $table->tinyInteger('kuantiti');
             $table->tinyInteger('kondisi');

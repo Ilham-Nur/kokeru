@@ -2,12 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\InventarisKondisi;
 use App\Models\InventarisSarana;
 use App\Models\Jadwal;
 use App\Models\Ruang;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Svg\Tag\Rect;
 
 class InventarisController extends Controller
@@ -20,11 +22,35 @@ class InventarisController extends Controller
 
     public function inventaris_bulan($id_ruang, $bulan)
     {
+        $bulanAngka = Carbon::parse($bulan)->month;
         $ruang = Ruang::where('id', $id_ruang)->first();
         $tahun = Carbon::parse($ruang->created_at)->year;
         $sarana = InventarisSarana::where('ruang_id', $id_ruang)->get();
+        // $saranas = InventarisSarana::with('inventarisKondisis')->where('ruang_id', $id_ruang)->get();
+        
 
-        return view('manajer.inventaris.inventaris_bulan', compact('bulan', 'tahun', 'ruang', 'sarana'));
+        $inventaris = InventarisSarana::where('ruang_id', $id_ruang)->join('inventaris_kondisis', 'inventaris_saranas.id', '=', 'inventaris_kondisis.inventaris_sarana_id')
+        // ->where('inventaris_saranas.ruang_id', $id_ruang)
+        // ->where('inventaris_saranas.ruang_id', $id_ruang)
+        // ->where('inventaris_kondisis.bulan', $bulanAngka)
+        ->select(
+            'inventaris_saranas.id',
+            'inventaris_saranas.kode',
+            'inventaris_saranas.nama_sarana',
+            'inventaris_kondisis.kuantiti',
+            'inventaris_kondisis.bulan',
+            'inventaris_kondisis.dipinjam'
+        )
+       ->get();
+        // dd($saranas);
+
+
+        $saranas = InventarisSarana::with(['inventarisKondisis' => function($query) use ($bulanAngka) {
+            $query->where('bulan', $bulanAngka);
+        }])->where('ruang_id', $id_ruang)->get();
+        // dd($saranas);
+
+        return view('manajer.inventaris.inventaris_bulan', compact('id_ruang', 'bulan', 'tahun', 'ruang', 'sarana','saranas', 'bulanAngka'));
     }
 
     public function inventaris_sarana($id_ruang)
@@ -102,7 +128,7 @@ class InventarisController extends Controller
     {
         $ruang = Ruang::where('id', $id_ruang)->first();
         $sarana = InventarisSarana::where('ruang_id', $id_ruang)->latest()->get();
-        
+
         return view('cs.inventaris.inventaris_sarana', compact('id_ruang', 'ruang', 'sarana'));
     }
 
