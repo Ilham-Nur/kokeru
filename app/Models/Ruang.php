@@ -9,7 +9,7 @@ class Ruang extends Model
 {
     use HasFactory;
     protected $table = 'ruang';
-    protected $fillable = ['id', 'nama_ruang'];
+    protected $fillable = ['id', 'nama_ruang', 'pj_ruang'];
 
     public function jadwal(){
         return $this->belongsTo(Jadwal::class);

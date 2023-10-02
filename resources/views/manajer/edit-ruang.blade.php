@@ -54,6 +54,10 @@
                     <input class="form-control" type="text" value="{{$ruang->nama_ruang}}" name="nama_ruang" required>
                 </div>
                 <div class="form-group">
+                    <label for="example-search-input" class="form-control-label">PJ ruang</label>
+                    <input class="form-control" type="text" value="{{$ruang->pj_ruang}}" name="pj_ruang" required>
+                </div>
+                <div class="form-group">
                     <input type="submit" name="submit" value="Update" class="btn btn-primary">
                     <a href="{{ route('manajer.ruang.index') }}" class="btn btn-secondary">Cancel</a>
                 </div>

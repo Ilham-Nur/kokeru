@@ -49,6 +49,7 @@ class RuangController extends Controller
         $request->validate([
             'id' => 'required',
             'nama_ruang' => 'required',
+            'pj_ruang' => 'required',
         ]);
     
         $store = Ruang::create($request->all());
@@ -94,6 +95,7 @@ class RuangController extends Controller
     {
         $request->validate([
             'nama_ruang' => 'required',
+            'pj_ruang'   => 'required',
         ]);
     
         $update = $ruang->update($request->all());

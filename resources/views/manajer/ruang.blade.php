@@ -33,7 +33,17 @@
                   <div class="input-group-prepend">
                     <span class="input-group-text"><i class="ni ni-bullet-list-67"></i></span>
                   </div>
-                  <input class="form-control" name="nama_ruang" placeholder="Nama Ruang (ex: R102)" type="text" required
+                  <input class="form-control" name="nama_ruang" placeholder="Nama Ruang" type="text" required
+                    minlength="3" maxlength="5">
+                </div>
+              </div>
+
+              <div class="form-group">
+                <div class="input-group input-group-merge input-group-alternative">
+                  <div class="input-group-prepend">
+                    <span class="input-group-text"><i class="ni ni-bullet-list-67"></i></span>
+                  </div>
+                  <input class="form-control" name="pj_ruang" placeholder="PJ Ruang" type="text" required
                     minlength="3" maxlength="5">
                 </div>
               </div>
@@ -98,10 +108,12 @@
                     data-target="#inventaris{{ $r->id }}">
                     <i class="fas fa-wrench"></i>
                   </button>
-                  <a class="btn btn-sm btn-secondary" href="{{ route('inventaris.sarana', $r->id) }}"><i class="fas fas fa-plus"></i></a>
+                  <a class="btn btn-sm btn-secondary" href="{{ route('inventaris.sarana', $r->id) }}"><i
+                      class="fas fas fa-plus"></i></a>
                 </td>
                 <td>
-                  <a class="btn btn-sm btn-success" href="{{ route('data.ac.index', $r->id) }}"><i class="fas fa-wrench"></i></a>
+                  <a class="btn btn-sm btn-success" href="{{ route('data.ac.index', $r->id) }}"><i
+                      class="fas fa-wrench"></i></a>
                 </td>
                 <td>
                   <a class="btn btn-warning btn-sm" href="{{route('ruang.edit', $r->id)}}">Edit</a>&nbsp;&nbsp;
@@ -165,15 +177,15 @@
                           <div class="row">
                             <div class="row">
                               @foreach ($bulanList as $bulan)
-                                  @php
-                                      $bulanSingkat = substr($bulan, 0, 3); // Mengambil tiga karakter pertama dari nama bulan
-                                  @endphp
-                                  <div class="col-md-4">
-                                      <a href="{{ route('inventaris.bulan', ['bulan' => $bulan, 'id_ruang' => $r->id]) }}"
-                                         class="btn btn-success my-2 w-100">{{ $bulanSingkat }}</a>
-                                  </div>
+                              @php
+                              $bulanSingkat = substr($bulan, 0, 3); // Mengambil tiga karakter pertama dari nama bulan
+                              @endphp
+                              <div class="col-md-4">
+                                <a href="{{ route('inventaris.bulan', ['bulan' => $bulan, 'id_ruang' => $r->id]) }}"
+                                  class="btn btn-success my-2 w-100">{{ $bulanSingkat }}</a>
+                              </div>
                               @endforeach
-                          </div>
+                            </div>
                           </div>
                         </div>
                       </div>
