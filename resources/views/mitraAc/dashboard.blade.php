@@ -135,12 +135,12 @@
                                 <div class="card-body bg-gradient-red">
                                     <div class="row">
                                         <div class="col text-center">
-                                            <span class="font-weight-bold mb-0 text-white">BELUM BERSIH</span><br>
+                                            {{-- <span class="font-weight-bold mb-0 text-white">BELUM BERSIH</span><br> --}}
 
                                         </div>
                                     </div>
                                     <p class="mt-1 mb-0 text-center">
-                                        <a href="">
+                                        <a href="{{ route('mitra.pemeliharaan.index', $r->id) }}">
                                             <button class="btn btn-sm btn-icon btn-neutral">
                                                 <span class="btn-inner--icon"><i class="ni ni-camera-compact"></i></span>
                                                 <span class="btn-inner--text">Kontrol</span>

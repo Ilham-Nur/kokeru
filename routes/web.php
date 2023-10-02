@@ -10,6 +10,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Auth\LogoutController;
 use App\Http\Controllers\UploadBuktiController;
 use App\Http\Controllers\CS\DashboardController;
+use App\Http\Controllers\DataAcController;
 use App\Http\Controllers\InventarisController;
 use App\Http\Controllers\InventarisKondisiController;
 use App\Http\Controllers\MitraAcController;
@@ -55,13 +56,18 @@ Route::prefix('manajer')->middleware(['manajer'])->group(function (){
     Route::put('/inventaris/{id}/{id_ruang}/edit', [InventarisController::class, 'update_inventaris_sarana'])->name('manager.inventaris..sarana.update');
     Route::delete('/inventaris/{id}/destroy', [InventarisController::class, 'destroy_inventaris_sarana'])->name('manager.inventaris..sarana.destroy');
     Route::get('/inventaris-sarana/{id_ruang}', [InventarisController::class, 'inventaris_sarana'])->name('inventaris.sarana');
-    Route::get('/pemeliharaan-ac/{id_ruang}', [PemeliharaanAcController::class, 'index'])->name('pemeliharaanAC.index');
+    // Route::get('/pemeliharaan-ac/{id_ruang}', [PemeliharaanAcController::class, 'index'])->name('pemeliharaanAC.index');
     Route::get('/inventaris/{id_ruang}/{bulan}', [InventarisController::class, 'inventaris_bulan'])->name('inventaris.bulan');
     Route::post('/inventaris-kondisi/{id_sarana}/{bulan}', [InventarisKondisiController::class, 'manajer_store'])->name('manajer.inventaris.kondisi.store');
     Route::get('/mitra-ac', [MitraAcController::class, 'index_manajer'])->name('manajer.mitraac.index');
     Route::post('/mitra-ac', [MitraAcController::class, 'store'])->name('manajer.mitraac.store');
     Route::put('/mitra-ac/{id_user}', [MitraAcController::class, 'update'])->name('manajer.mitraac.update');
     Route::delete('/mitra-ac/{id_user}', [MitraAcController::class, 'destroy'])->name('manajer.mitraac.destroy');
+    Route::get('/data-ac/{id_ruang}', [DataAcController::class,'index'])->name('data.ac.index');
+    Route::get('/data-ac/create/{id_ruang}', [DataAcController::class,'create'])->name('data.ac.create');
+    Route::post('/data-ac/create/{id_ruang}', [DataAcController::class,'store'])->name('data.ac.store');
+    Route::get('/data-ac/edit/{id_ac}/{id_ruang}', [DataAcController::class,'edit'])->name('data.ac.edit');
+    Route::put('/data-ac/edit/{id_ac}/{id_ruang}', [DataAcController::class,'update'])->name('data.ac.update');
     // Route::resource('/mitra-ac', MitraAcController::class);
 });
 
@@ -90,6 +96,11 @@ Route::prefix('cs')->middleware(['cs'])->group(function(){
 // Halaman Mitra
 Route::prefix('mitra')->middleware(['mitra'])->group(function(){
     Route::get('/', [MitraAcController::class, 'index'])->name('mitra.dashboard');
+    Route::get('/pemeliharaan-ac/{id_ruang}', [PemeliharaanAcController::class,'index'])->name('mitra.pemeliharaan.index');
+    Route::get('/pemeliharaan-ac/{id_ruang}/{id_ac}/create', [PemeliharaanAcController::class,'create'])->name('mitra.pemeliharaan.create');
+    Route::post('/pemeliharaan-ac/{id_ruang}/{id_ac}/create', [PemeliharaanAcController::class,'store'])->name('mitra.pemeliharaan.store');
+    Route::get('/pemeliharaan-ac/{id_ruang}/{id_pemeliharaan}/{id_ac}/edit', [PemeliharaanAcController::class,'edit'])->name('mitra.pemeliharaan.edit');
+    Route::put('/pemeliharaan-ac/{id_ruang}/{id_pemeliharaan}/{id_ac}/edit', [PemeliharaanAcController::class,'update'])->name('mitra.pemeliharaan.update');
 });
 Route::get('akun', [ProfileController::class, 'index'])->name('akun');
 Route::patch('/update-akun', [ProfileController::class, 'store'])->name('update-akun');

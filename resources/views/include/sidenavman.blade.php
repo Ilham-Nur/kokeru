@@ -50,7 +50,7 @@
             </li>
             @elseif(auth()->user()->mitra==1)
             <li class="nav-item">
-              <a class="nav-link" href="">
+              <a class="nav-link" href="{{ route('mitra.dashboard') }}">
                 <i class="fas fa-home text-purple"></i>
                 <span class="nav-link-text">Home</span>
               </a>

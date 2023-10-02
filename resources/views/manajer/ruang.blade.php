@@ -84,7 +84,7 @@
                 <th scope="col" class="sort" data-sort="name">ID <i class="fas fa-sort"></th>
                 <th scope="col" class="sort">Nama Ruang <i class="fas fa-sort"></th>
                 <th scope="col" class="sort">Inventaris Sarana <i class="fas fa-sort"></th>
-                <th scope="col" class="sort">Pemeliharaan AC <i class="fas fa-sort"></th>
+                <th scope="col" class="sort">Data AC <i class="fas fa-sort"></th>
                 <th scope="col" class="sort">Aksi</th>
               </tr>
             </thead>
@@ -101,7 +101,7 @@
                   <a class="btn btn-sm btn-secondary" href="{{ route('inventaris.sarana', $r->id) }}"><i class="fas fas fa-plus"></i></a>
                 </td>
                 <td>
-                  <a class="btn btn-sm btn-success" href="{{ route('pemeliharaanAC.index', $r->id) }}"><i class="fas fa-wrench"></i></a>
+                  <a class="btn btn-sm btn-success" href="{{ route('data.ac.index', $r->id) }}"><i class="fas fa-wrench"></i></a>
                 </td>
                 <td>
                   <a class="btn btn-warning btn-sm" href="{{route('ruang.edit', $r->id)}}">Edit</a>&nbsp;&nbsp;

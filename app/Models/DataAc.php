@@ -11,4 +11,7 @@ class DataAc extends Model
     protected $table = 'data_ac';
     protected $guarded = ['id'];
     
+    public function dataAcs(){
+        return $this->hasMany(MaintananceAc::class, 'data_ac_id');
+    }
 }
