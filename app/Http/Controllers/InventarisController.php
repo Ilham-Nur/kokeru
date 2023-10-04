@@ -66,7 +66,7 @@ class InventarisController extends Controller
     public function edit_inventaris_sarana($id, $id_ruang)
     {
         $inventaris = InventarisSarana::where('id', $id)->first();
-        return view('manajer.inventaris.edit_inventaris_sarana', compact('id', 'inventaris'));
+        return view('manajer.inventaris.edit_inventaris_sarana', compact('id', 'inventaris', 'id_ruang'));
     }
 
     public function update_inventaris_sarana($id, $id_ruang, Request $request)
@@ -82,7 +82,7 @@ class InventarisController extends Controller
             'nama_sarana' => $request->nama_sarana
         ]);
 
-        return redirect()->route('manajer.inventaris.edit_inventaris_sarana', $id_ruang);
+        return redirect()->route('inventaris.sarana', $id_ruang);
     }
 
     public function destroy_inventaris_sarana($id)
