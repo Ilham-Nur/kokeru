@@ -3,7 +3,9 @@
       <!-- Brand -->
       <div class="sidenav-header  align-items-center">
         <a class="navbar-brand" href="javascript:void(0)">
-          <img src="{{asset('assets/img/brand/blue.png')}}" class="navbar-brand-img" alt="...">
+          <img src="{{asset('assets/img/brand/LogoUIS.png')}}" class="navbar-brand-img" alt="...">
+          <br>
+          <span class="mx-1 text-success">Universitas Ibnu Sina</span>
         </a>
       </div>
       <div class="navbar-inner">
@@ -39,7 +41,7 @@
             <li class="nav-item">
               <a class="nav-link" href="{{route('manajer.jadwal.index')}}">
                 <i class="ni ni-calendar-grid-58 text-yellow"></i>
-                <span class="nav-link-text">Jadwal</span>
+                <span class="nav-link-text">Penugasan CS</span>
               </a>
             </li>
             <li class="nav-item">

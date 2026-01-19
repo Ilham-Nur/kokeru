@@ -9,68 +9,58 @@ use Illuminate\Support\Facades\Hash;
 
 class ProfileController extends Controller
 {
-    public function index(){
-        if(auth()->user()->manajer){
+    public function index()
+    {
+        if (auth()->user()->manajer) {
             $manajer = Auth::user();
             return view('manajer.profil', ['profil' => $manajer]);
-        } else{
+        } else {
             $cs = Auth::user();
             return view('manajer.profil', ['profil' => $cs]);
         }
     }
 
-    public function store(Request $request){
-
+    public function store(Request $request)
+    {
         $request->validate([
-            'nama' => 'required|max:255',
-            'email' => 'required|email|max:255',
+            'nama'  => 'required|string|max:255',
+            'email' => 'required|email',
+            'password'     => 'nullable',
+            'password_new' => 'nullable|min:5|confirmed|required_with:password',
         ]);
 
-        $id = auth()->user()->id;
+        $user = auth()->user();
 
-        if(isset($request->password)){
-            if(!isset($request->password_new)){
-                if(auth()->user()->manajer){
-                    return redirect()->route('manajer.profil')->with('failed', 'Anda belum memasukkan password baru');
-                } else{
-                    return redirect()->route('akun')->with('failed', 'Anda belum memasukkan password baru');
-                }
+        // Update basic info dulu
+        $data = [
+            'nama_user' => $request->nama,
+            'email'     => $request->email,
+        ];
+
+        // Kalau user memang berniat ganti password
+        if ($request->filled('password')) {
+
+            // Cek password lama benar
+            if (!Hash::check($request->password, $user->password)) {
+                return $user->manajer
+                    ? redirect()->route('manajer.profil')->with('failed', 'Password lama tidak sama!')
+                    : redirect()->route('akun')->with('failed', 'Password lama tidak sama!');
             }
-            $pass = Hash::check($request->password, auth()->user()->password);
-            if ($pass){
-                $store = User::where('id', $id)
-                ->update([
-                    'nama_user' => $request->nama,
-                    'email' => $request->email,
-                    'password' => bcrypt($request->password_new)
-                ]);
-            } else {
-                if(auth()->user()->manajer){
-                    return redirect()->route('manajer.profil')->with('failed', 'Password tidak sama!');
-                } else{
-                    return redirect()->route('akun')->with('failed', 'Password tidak sama!');
-                }
-            }
-        } else{
-            $store = User::where('id', $id)
-                ->update([
-                    'nama_user' => $request->nama,
-                    'email' => $request->email,
-                ]);
+
+            // Set password baru
+            $data['password'] = Hash::make($request->password_new);
         }
 
-        if ($store){
-            if(auth()->user()->manajer){
-                return redirect()->route('manajer.profil')->with('success', 'Data Anda berhasil diperbarui');
-            } else{
-                return redirect()->route('akun')->with('success', 'Data Anda berhasil diperbarui');
-            }
-        } else {
-            if(auth()->user()->manajer){
-                return redirect()->route('manajer.profil')->with('failed', 'Data Anda gagal diperbarui');
-            } else{
-                return redirect()->route('akun')->with('failed', 'Data Anda gagal diperbarui');
-            }
+        $store = User::where('id', $user->id)->update($data);
+
+        if ($store) {
+            return $user->manajer
+                ? redirect()->route('manajer.profil')->with('success', 'Data Anda berhasil diperbarui')
+                : redirect()->route('akun')->with('success', 'Data Anda berhasil diperbarui');
         }
+
+        return $user->manajer
+            ? redirect()->route('manajer.profil')->with('failed', 'Data Anda gagal diperbarui')
+            : redirect()->route('akun')->with('failed', 'Data Anda gagal diperbarui');
     }
 }

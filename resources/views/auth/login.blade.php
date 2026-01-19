@@ -2,7 +2,7 @@
 <html>
 <head>
   @include('include.meta')
-  <title>Kokeru | Login</title>
+  <title>Universitas Ibnu Sina | Login</title>
 </head>
 <body class="bg-default">
   <!-- Navbar -->

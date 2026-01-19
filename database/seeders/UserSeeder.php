@@ -29,16 +29,16 @@ class UserSeeder extends Seeder
         // manajer
         DB::table('users')->insert([
             'nama_user' => 'Manajer',
-            'email' => 'manajer@gmail.com',
-            'password' => bcrypt('admin1234'),
+            'email' => 'admin@gmail.com',
+            'password' => bcrypt('admin123321'),
             'manajer' => true
         ]);
 
         // user
         DB::table('users')->insert([
-            'nama_user' => 'hanjar',
+            'nama_user' => 'anam',
             'email' => 'cs@gmail.com',
-            'password' => bcrypt('cs1234'),
+            'password' => bcrypt('cs123321'),
             'manajer' => false
         ]);
         // mitra
