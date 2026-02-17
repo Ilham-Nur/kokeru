@@ -8,10 +8,20 @@ use Illuminate\Database\Eloquent\Model;
 class Ruang extends Model
 {
     use HasFactory;
-    protected $table = 'ruang';
-    protected $fillable = ['id', 'nama_ruang', 'pj_ruang'];
 
-    public function jadwal(){
+    protected $table = 'ruang';
+
+    protected $fillable = [
+        'id',
+        'nama_ruang',
+        'pj_ruang',
+        'scan_token',
+        'qr_path',
+        'qr_url',
+    ];
+
+    public function jadwal()
+    {
         return $this->belongsTo(Jadwal::class);
     }
 }

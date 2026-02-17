@@ -38,7 +38,7 @@ Route::get('/', [LoginController::class, 'index'])->middleware('guest')->name('a
 Route::post('/login', [LoginController::class, 'store'])->name('auth.login');
 
 // halaman manajer
-Route::prefix('manajer')->middleware(['manajer'])->group(function (){
+Route::prefix('manajer')->middleware(['manajer'])->group(function () {
     Route::get('/', [LaporanController::class, 'manajer'])->name('manajer.dashboard');
     Route::get('/ruang', [RuangController::class, 'index'])->name('manajer.ruang.index');
     Route::get('/cs', [CSController::class, 'index'])->name('manajer.cs.index');
@@ -63,11 +63,11 @@ Route::prefix('manajer')->middleware(['manajer'])->group(function (){
     Route::post('/mitra-ac', [MitraAcController::class, 'store'])->name('manajer.mitraac.store');
     Route::put('/mitra-ac/{id_user}', [MitraAcController::class, 'update'])->name('manajer.mitraac.update');
     Route::delete('/mitra-ac/{id_user}', [MitraAcController::class, 'destroy'])->name('manajer.mitraac.destroy');
-    Route::get('/data-ac/{id_ruang}', [DataAcController::class,'index'])->name('data.ac.index');
-    Route::get('/data-ac/create/{id_ruang}', [DataAcController::class,'create'])->name('data.ac.create');
-    Route::post('/data-ac/create/{id_ruang}', [DataAcController::class,'store'])->name('data.ac.store');
-    Route::get('/data-ac/edit/{id_ac}/{id_ruang}', [DataAcController::class,'edit'])->name('data.ac.edit');
-    Route::put('/data-ac/edit/{id_ac}/{id_ruang}', [DataAcController::class,'update'])->name('data.ac.update');
+    Route::get('/data-ac/{id_ruang}', [DataAcController::class, 'index'])->name('data.ac.index');
+    Route::get('/data-ac/create/{id_ruang}', [DataAcController::class, 'create'])->name('data.ac.create');
+    Route::post('/data-ac/create/{id_ruang}', [DataAcController::class, 'store'])->name('data.ac.store');
+    Route::get('/data-ac/edit/{id_ac}/{id_ruang}', [DataAcController::class, 'edit'])->name('data.ac.edit');
+    Route::put('/data-ac/edit/{id_ac}/{id_ruang}', [DataAcController::class, 'update'])->name('data.ac.update');
     // Route::resource('/mitra-ac', MitraAcController::class);
 });
 
@@ -77,7 +77,7 @@ Route::resource('jadwal', JadwalController::class);
 Route::resource('laporan', LaporanController::class);
 
 // halaman cs
-Route::prefix('cs')->middleware(['cs'])->group(function(){
+Route::prefix('cs')->middleware(['cs'])->group(function () {
     Route::get('/', [DashboardController::class, 'index'])->name('cs.dashboard');
     Route::get('/{id_ruang}/upload', [UploadBuktiController::class, 'index'])->name('cs.bukti');
     Route::post('/upload', [UploadBuktiController::class, 'store'])->name('cs.bukti.upload');
@@ -94,14 +94,18 @@ Route::prefix('cs')->middleware(['cs'])->group(function(){
 });
 
 // Halaman Mitra
-Route::prefix('mitra')->middleware(['mitra'])->group(function(){
+Route::prefix('mitra')->middleware(['mitra'])->group(function () {
     Route::get('/', [MitraAcController::class, 'index'])->name('mitra.dashboard');
-    Route::get('/pemeliharaan-ac/{id_ruang}', [PemeliharaanAcController::class,'index'])->name('mitra.pemeliharaan.index');
-    Route::get('/pemeliharaan-ac/{id_ruang}/{id_ac}/create', [PemeliharaanAcController::class,'create'])->name('mitra.pemeliharaan.create');
-    Route::post('/pemeliharaan-ac/{id_ruang}/{id_ac}/create', [PemeliharaanAcController::class,'store'])->name('mitra.pemeliharaan.store');
-    Route::get('/pemeliharaan-ac/{id_ruang}/{id_pemeliharaan}/{id_ac}/edit', [PemeliharaanAcController::class,'edit'])->name('mitra.pemeliharaan.edit');
-    Route::put('/pemeliharaan-ac/{id_ruang}/{id_pemeliharaan}/{id_ac}/edit', [PemeliharaanAcController::class,'update'])->name('mitra.pemeliharaan.update');
+    Route::get('/pemeliharaan-ac/{id_ruang}', [PemeliharaanAcController::class, 'index'])->name('mitra.pemeliharaan.index');
+    Route::get('/pemeliharaan-ac/{id_ruang}/{id_ac}/create', [PemeliharaanAcController::class, 'create'])->name('mitra.pemeliharaan.create');
+    Route::post('/pemeliharaan-ac/{id_ruang}/{id_ac}/create', [PemeliharaanAcController::class, 'store'])->name('mitra.pemeliharaan.store');
+    Route::get('/pemeliharaan-ac/{id_ruang}/{id_pemeliharaan}/{id_ac}/edit', [PemeliharaanAcController::class, 'edit'])->name('mitra.pemeliharaan.edit');
+    Route::put('/pemeliharaan-ac/{id_ruang}/{id_pemeliharaan}/{id_ac}/edit', [PemeliharaanAcController::class, 'update'])->name('mitra.pemeliharaan.update');
+    Route::get('/scan/{token}', [PemeliharaanAcController::class, 'scanByToken'])
+        ->middleware(['auth', 'mitra'])
+        ->name('scan.token');
 });
+
+
 Route::get('akun', [ProfileController::class, 'index'])->name('akun');
 Route::patch('/update-akun', [ProfileController::class, 'store'])->name('update-akun');
-

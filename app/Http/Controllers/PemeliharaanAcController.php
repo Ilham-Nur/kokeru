@@ -11,7 +11,8 @@ use PDO;
 
 class PemeliharaanAcController extends Controller
 {
-    public function index($id_ruang){
+    public function index($id_ruang)
+    {
         // $data_ac = DataAc::with('dataAcs')->where('ruang_id', $id_ruang)->latest()->get();
         $data_user = Auth::user()->id;
         $userId = Auth::user()->id;
@@ -22,14 +23,16 @@ class PemeliharaanAcController extends Controller
         return view('mitraAc.pemeliharaan_ac.index', compact('id_ruang', 'data_ac'));
     }
 
-    public function create($id_ruang, $id_ac){
+    public function create($id_ruang, $id_ac)
+    {
         $ruang = Ruang::where('id', $id_ruang)->first();
         $data_ac = DataAc::where('ruang_id', $id_ruang)->where('id', $id_ac)->first();
         $data_pemeliharaan = new MaintananceAc();
         return view('mitraAc.pemeliharaan_ac.create', compact('data_ac', 'ruang', 'id_ac', 'id_ruang', 'data_pemeliharaan'));
     }
 
-    public function store($id_ruang, $id_ac, Request $request){
+    public function store($id_ruang, $id_ac, Request $request)
+    {
         $request->validate([
             'tanggal'       => 'required',
             'description'   => 'required',
@@ -54,15 +57,21 @@ class PemeliharaanAcController extends Controller
         return redirect()->route('mitra.pemeliharaan.index', $id_ruang);
     }
 
-    public function edit($id_ruang,$id_pemeliharaan, $id_ac){
+    public function edit($id_ruang, $id_pemeliharaan, $id_ac)
+    {
         $ruang = Ruang::where('id', $id_ruang)->first();
         $data_ac = DataAc::where('ruang_id', $id_ruang)->where('id', $id_ac)->first();
         $data_pemeliharaan = MaintananceAc::where('id', $id_pemeliharaan)->first();
         // dd($data_pemeliharaan);
-        return view('mitraAc.pemeliharaan_ac.edit', compact('data_ac', 'ruang', 'id_ac', 'id_ruang','id_pemeliharaan', 'data_pemeliharaan'));
+        return view('mitraAc.pemeliharaan_ac.edit', compact('data_ac', 'ruang', 'id_ac', 'id_ruang', 'id_pemeliharaan', 'data_pemeliharaan'));
     }
 
-    public function update(){
+    public function update() {}
 
+
+    public function scanByToken($token)
+    {
+        $ruang = Ruang::where('scan_token', $token)->firstOrFail();
+        return redirect()->route('mitra.pemeliharaan.index', $ruang->id);
     }
 }

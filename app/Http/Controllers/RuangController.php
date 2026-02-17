@@ -5,6 +5,9 @@ namespace App\Http\Controllers;
 use App\Models\Ruang;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
+use SimpleSoftwareIO\QrCode\Facades\QrCode;
 
 class RuangController extends Controller
 {
@@ -19,12 +22,11 @@ class RuangController extends Controller
         for ($i = 1; $i <= 12; $i++) {
             $date = Carbon::create(null, $i, 1);
             $bulanList[$i] = $date->format('F');
-            
         }
         $ruang = Ruang::get();
         $last = Ruang::select('id')->orderByDesc('id')->limit(1)->get();
 
-       
+
         return view('manajer.ruang', ['ruang' => $ruang, 'last' => $last, 'bulanList' => $bulanList]);
     }
 
@@ -51,15 +53,42 @@ class RuangController extends Controller
             'nama_ruang' => 'required',
             'pj_ruang' => 'required',
         ]);
-    
-        $store = Ruang::create($request->all());
-        if($store){
+
+        $ruang = Ruang::create($request->only(['id', 'nama_ruang', 'pj_ruang']));
+
+        $this->ensureQr($ruang);
+
+        if ($ruang) {
             return redirect()->route('manajer.ruang.index')
-                             ->with('success','Data ruang berhasil ditambahkan');
-        } else{
+                ->with('success', 'Data ruang berhasil ditambahkan');
+        } else {
             return redirect()->route('manajer.ruang.index')
-                             ->with('failed','Data ruang gagal ditambahkan');
+                ->with('failed', 'Data ruang gagal ditambahkan');
         }
+    }
+
+    private function ensureQr(Ruang $ruang): void
+    {
+        if (!$ruang->scan_token) {
+            $ruang->scan_token = (string) Str::uuid();
+        }
+
+        $url  = route('scan.token', $ruang->scan_token);
+        $path = "qrcode/ruang-{$ruang->id}.svg";
+
+        $needGenerate = !$ruang->qr_path
+            || !Storage::disk('public')->exists($ruang->qr_path)
+            || $ruang->qr_url !== $url;
+
+        if ($needGenerate) {
+            $svg = QrCode::format('svg')->size(220)->generate($url);
+            Storage::disk('public')->put($path, $svg);
+
+            $ruang->qr_path = $path;
+            $ruang->qr_url  = $url;
+        }
+
+        $ruang->save();
     }
 
     /**
@@ -81,7 +110,7 @@ class RuangController extends Controller
      */
     public function edit(Ruang $ruang)
     {
-        return view('manajer.edit-ruang',compact('ruang'));
+        return view('manajer.edit-ruang', compact('ruang'));
     }
 
     /**
@@ -97,14 +126,18 @@ class RuangController extends Controller
             'nama_ruang' => 'required',
             'pj_ruang'   => 'required',
         ]);
-    
+
         $update = $ruang->update($request->all());
-        if($update){
+        
+        if (!$ruang->scan_token || !$ruang->qr_path) {
+            $this->ensureQr($ruang);
+        }
+        if ($update) {
             return redirect()->route('manajer.ruang.index')
-                             ->with('success','Data ruang berhasil diperbarui');
-        } else{
+                ->with('success', 'Data ruang berhasil diperbarui');
+        } else {
             return redirect()->route('manajer.ruang.index')
-                             ->with('failed','Data ruang gagal diperbarui');
+                ->with('failed', 'Data ruang gagal diperbarui');
         }
     }
 
@@ -117,12 +150,12 @@ class RuangController extends Controller
     public function destroy(Ruang $ruang)
     {
         $delete = $ruang->delete();
-        if($delete){
+        if ($delete) {
             return redirect()->route('manajer.ruang.index')
-                             ->with('success','Data ruang berhasil dihapus');
-        } else{
+                ->with('success', 'Data ruang berhasil dihapus');
+        } else {
             return redirect()->route('manajer.ruang.index')
-                             ->with('failed','Data ruang gagal dihapus');
+                ->with('failed', 'Data ruang gagal dihapus');
         }
     }
 }

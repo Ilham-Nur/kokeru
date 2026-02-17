@@ -6,20 +6,18 @@ use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
-class Manajer
+class ManajerRead
 {
-    /**
-     * Handle an incoming request.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \Closure  $next
-     * @return mixed
-     */
     public function handle(Request $request, Closure $next)
     {
-        if (Auth::check() && Auth::user()->manajer == 1 && Auth::user()->mitra == 0) {
+        if (!Auth::check()) return redirect()->route('auth.login');
+
+        $u = Auth::user();
+
+        if ($u->manajer == 1) { // 1,0 dan 1,1 sama-sama lolos
             return $next($request);
         }
+
         return redirect()->back();
     }
 }
