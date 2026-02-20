@@ -33,7 +33,7 @@ class UploadBuktiController extends Controller
             $id_jadwal = Jadwal::where('id_ruang', $request->id_ruang)->latest()->first();
             $laporan = Laporan::create([
                 'id_jadwal' => $id_jadwal->id,
-                'id_ruang'  => $request->id_ruang
+                'id_ruang' => $request->id_ruang
             ]);
             $files = [];
             if ($request->hasfile('bukti')) {
@@ -41,7 +41,7 @@ class UploadBuktiController extends Controller
                     $name = time() . rand(1, 100) . '.' . $file->extension();
                     $file->move(public_path('uploads'), $name);
                     $files[] = $name;
-                   
+
                 }
             }
             // dd($files);
@@ -49,6 +49,7 @@ class UploadBuktiController extends Controller
                 $bukti = new Bukti();
                 $bukti->id_laporan = $laporan->id;
                 $bukti->nama_file = $filename;
+                $bukti->deskripsi = $request->deskripsi; // tambah ini
                 $bukti->save();
             }
             DB::commit();
@@ -57,6 +58,6 @@ class UploadBuktiController extends Controller
             return redirect()->back()->with('error', $th->getMessage());
         }
         return redirect()->route('cs.dashboard')
-        ->with('success', 'Bukti laporan berhasil diupload');
+            ->with('success', 'Bukti laporan berhasil diupload');
     }
 }

@@ -27,12 +27,14 @@ class InventarisKondisiController extends Controller
     public function cs_store($id_sarana, $bulan, Request $request){
         $bulanAngka = Carbon::parse($bulan)->month;
         $request->validate([
-            'kuantiti' => 'required|numeric',
-            'kondisi' => 'required|numeric',
-            'dipinjam' => 'required|numeric',
-            'mutasi' => 'required|numeric',
-            'user' => 'required|numeric',
-            'sign' => 'required|numeric'
+            'kuantiti' => 'required|integer',
+            'kondisi' => 'required|integer',
+            'dipinjam' => 'required|integer',
+            'mutasi' => 'required|integer',
+            'user' => 'required|integer',
+            'sign' => 'required|integer',
+            'foto' => 'nullable|image|max:2048',
+            'deskripsi' => 'nullable|string'
         ]);
 
         $data = [
@@ -44,14 +46,30 @@ class InventarisKondisiController extends Controller
             'dipinjam' => $request->dipinjam,
             'mutasi' => $request->mutasi,
             'user' => $request->user,
-            'sign' => $request->sign
+            'sign' => $request->sign,
+            'deskripsi' => $request->deskripsi
         ];
+
+        if ($request->hasFile('foto')) {
+            $file = $request->file('foto');
+            $filename = time() . '_' . $file->getClientOriginalName();
+            $file->move(public_path('img/inventaris'), $filename);
+            $data['foto'] = $filename;
+        }
 
           // Cek apakah data dengan bulan yang sama sudah ada dalam database
     $manajer = InventarisKondisi::where('bulan', $bulanAngka)
     ->where('inventaris_sarana_id', $id_sarana)
     // ->where('ruang_id', $id_ruang)
     ->first();
+        // Update or Create data based on sarana_id and bulan
+        InventarisKondisi::updateOrCreate(
+            [
+                'inventaris_sarana_id' => $id_sarana,
+                'bulan' => $bulanAngka
+            ],
+            $data
+        );
 
     if ($manajer === null) {
         // Jika data sudah ada, perbarui data yang ada
@@ -66,12 +84,12 @@ class InventarisKondisiController extends Controller
     public function manajer_store($id_sarana, $bulan, Request $request){
         $bulanAngka = Carbon::parse($bulan)->month;
         $request->validate([
-            'kuantiti' => 'required|numeric',
-            'kondisi' => 'required|numeric',
-            'dipinjam' => 'required|numeric',
-            'mutasi' => 'required|numeric',
-            'user' => 'required|numeric',
-            'sign' => 'required|numeric'
+            'kuantiti' => 'required|integer',
+            'kondisi' => 'required|integer',
+            'dipinjam' => 'required|integer',
+            'mutasi' => 'required|integer',
+            'user' => 'required|integer',
+            'sign' => 'required|integer'
         ]);
 
         $data = [
@@ -91,6 +109,14 @@ class InventarisKondisiController extends Controller
     ->where('inventaris_sarana_id', $id_sarana)
     // ->where('ruang_id', $id_ruang)
     ->first();
+        // Update or Create data based on sarana_id and bulan
+        InventarisKondisi::updateOrCreate(
+            [
+                'inventaris_sarana_id' => $id_sarana,
+                'bulan' => $bulanAngka
+            ],
+            $data
+        );
 
     if ($manajer === null) {
         // Jika data sudah ada, perbarui data yang ada

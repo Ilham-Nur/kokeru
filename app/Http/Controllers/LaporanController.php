@@ -145,20 +145,28 @@ class LaporanController extends Controller
         
     }
 
-    public function laporan()
+    public function laporan(Request $request)
     {
-        $date = date('Y-m-d');
-        //$date = '2020-12-15';
+        $date = $request->input('tanggal', date('Y-m-d'));
+        $search = $request->input('search');
+
         $count = Ruang::count();
-        $laporan = DB::select("SELECT lap.id, lap.id_jadwal, ruang.id AS id_ruang, ruang.nama_ruang, lap.created_at, users.nama_user 
+        
+        $sql = "SELECT lap.id, lap.id_jadwal, ruang.id AS id_ruang, ruang.nama_ruang, lap.created_at, users.nama_user 
             FROM ruang LEFT JOIN jadwal ON ruang.id = jadwal.id_ruang
-            LEFT JOIN (SELECT * FROM laporan WHERE laporan.created_at LIKE '$date%') AS lap ON lap.id_jadwal = jadwal.id
-            LEFT JOIN users ON users.id = jadwal.id_user");
-        $bukti = DB::select("SELECT * FROM bukti WHERE created_at LIKE '$date%'");
+            LEFT JOIN (SELECT * FROM laporan WHERE laporan.created_at LIKE ?) AS lap ON lap.id_jadwal = jadwal.id
+            LEFT JOIN users ON users.id = jadwal.id_user";
+
+        if ($search) {
+            $sql .= " WHERE ruang.nama_ruang LIKE '%$search%' OR users.nama_user LIKE '%$search%'";
+        }
+
+        $laporan = DB::select($sql, ["$date%"]);
+        $bukti = DB::select("SELECT * FROM bukti WHERE created_at LIKE ?", ["$date%"]);
         return view('pages.home', ['laporan' => $laporan, 'count' => $count, 'bukti' => $bukti]);
     }
 
-    public function manajer(){
+    public function manajer(Request $request){
         if(auth()->user()->manajer==1){
             $ruang = Ruang::count();
             $user = User::where('manajer',0)->count();
@@ -174,13 +182,21 @@ class LaporanController extends Controller
                 COUNT(laporan.id_jadwal) as frec FROM laporan where laporan.created_at BETWEEN '$seven' and '$last' GROUP BY 
                 CAST(laporan.created_at AS DATE) ORDER BY label");
 
+            $search = $request->input('search');
             $date = date('Y-m-d');
             //$date = '2020-12-15';
             $count = Ruang::count();
-            $laporan = DB::select("SELECT lap.id, lap.id_jadwal, ruang.id AS id_ruang, ruang.nama_ruang, lap.created_at, users.nama_user 
+            
+            $sql = "SELECT lap.id, lap.id_jadwal, ruang.id AS id_ruang, ruang.nama_ruang, lap.created_at, users.nama_user 
                 FROM ruang LEFT JOIN jadwal ON ruang.id = jadwal.id_ruang
                 LEFT JOIN (SELECT * FROM laporan WHERE laporan.created_at LIKE '$date%') AS lap ON lap.id_jadwal = jadwal.id
-                LEFT JOIN users ON users.id = jadwal.id_user");
+                LEFT JOIN users ON users.id = jadwal.id_user";
+            
+            if($search){
+                $sql .= " WHERE ruang.nama_ruang LIKE '%$search%' OR users.nama_user LIKE '%$search%'";
+            }
+
+            $laporan = DB::select($sql);
             $bukti = DB::select("SELECT * FROM bukti WHERE created_at LIKE '$date%'");
             // return view('pages.home', ['laporan' => $laporan, 'count' => $count, 'bukti' => $bukti]);
 
