@@ -106,6 +106,13 @@ Route::prefix('mitra')->middleware(['mitra'])->group(function () {
         ->name('scan.token');
 });
 
-
+Route::prefix('manajerread')->middleware(['manajerread'])->group(function () {
+    Route::get('/', [LaporanController::class, 'manajer'])->name('manajerread.dashboard');
+    Route::get('/laporan', [LaporanController::class, 'indexMan'])->name('manajerread.laporan.index');
+    Route::post('/laporan', [LaporanController::class, 'indexMan']);
+    Route::get('/inventaris', [InventarisController::class, 'index'])->name('manajerread.inventaris.index');
+    Route::get('/inventaris-sarana/{id_ruang}', [InventarisController::class, 'inventaris_sarana'])->name('manajerread.inventaris.sarana');
+    Route::get('/inventaris/{id_ruang}/{bulan}', [InventarisController::class, 'inventaris_bulan'])->name('manajerread.inventaris.bulan');
+});
 Route::get('akun', [ProfileController::class, 'index'])->name('akun');
 Route::patch('/update-akun', [ProfileController::class, 'store'])->name('update-akun');

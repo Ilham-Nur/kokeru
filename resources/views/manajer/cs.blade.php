@@ -1,6 +1,8 @@
 @extends('layout.manajer.content')
 
 @section('top-menu')
+@php $isReadOnly = auth()->user()->manajer == 1 && auth()->user()->mitra == 1; @endphp
+@if(!$isReadOnly)
   <button type="button" class="btn btn-sm btn-default mt-0 ml-8" data-toggle="modal" data-target="#modal-form">Tambah CS</button>
   <div class="modal fade" id="modal-form" tabindex="-1" role="dialog" aria-labelledby="modal-form" aria-hidden="true">
     <div class="modal-dialog modal- modal-dialog-centered modal-sm" role="document">
@@ -59,6 +61,7 @@
         </div>
       </div>
     </div>
+@endif
 @endsection
 
 @section('content')
@@ -95,7 +98,9 @@
                     <th scope="col" class="sort" data-sort="name">ID <i class="fas fa-sort"></th>
                     <th scope="col" class="sort">Nama<i class="fas fa-sort"></th>
                     <th scope="col" class="sort">Email <i class="fas fa-sort"></th>
+                    @if(!$isReadOnly)
                     <th scope="col" class="sort">Aksi</th>
+                    @endif
                   </tr>
                 </thead>
                 <tbody class="list">
@@ -105,8 +110,10 @@
                     <td>{{$r->nama_user}}</td>
                     <td>{{$r->email}}</td>
                     <td>
+                      @if(!$isReadOnly)
                       <a class="btn btn-warning btn-sm" href="{{route('cs.edit', $r->id)}}">Edit</a>&nbsp;&nbsp; 
                       <a class="btn btn-danger btn-sm" href="#" data-toggle="modal" data-target="#konfirmDelete{{$r->id}}">Delete</a>
+                      @endif
                     </td>
                   </tr>
                   <div class="modal fade" id="konfirmDelete{{$r->id}}" tabindex="-1" role="dialog" aria-labelledby="{{$r->id}}" aria-hidden="true">

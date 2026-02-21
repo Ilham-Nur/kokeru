@@ -17,7 +17,7 @@ class Manajer
      */
     public function handle(Request $request, Closure $next)
     {
-        if (Auth::check() && Auth::user()->manajer == 1 && Auth::user()->mitra == 0) {
+        if (Auth::check() && Auth::user()->manajer == 1) {
             return $next($request);
         }
         return redirect()->back();

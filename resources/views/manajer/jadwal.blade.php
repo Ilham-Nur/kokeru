@@ -1,9 +1,12 @@
 @extends('layout.manajer.content')
 
 @section('top-menu')
+@php $isReadOnly = auth()->user()->manajer == 1 && auth()->user()->mitra == 1; @endphp
+@if(!$isReadOnly)
   <a href="{{route('jadwal.create')}}">
     <button type="button" class="btn btn-sm btn-default mt-0 ml-8">Tambah Jadwal</button>
   </a>
+@endif
 @endsection
 
 @section('content')
@@ -68,7 +71,9 @@
                     <th scope="col">No</th>
                     <th scope="col" class="sort">Ruang<i class="fas fa-sort"></th>
                     <th scope="col" class="sort">Nama CS<i class="fas fa-sort"></th>
+                    @if(!$isReadOnly)
                     <th scope="col" class="sort">Aksi</th>
+                    @endif
                   </tr>
                 </thead>
                 <tbody class="list">
@@ -79,8 +84,10 @@
                     <td>{{$r->nama_ruang}}</td>
                     <td>{{$r->nama_user}}</td>
                     <td>
+                      @if(!$isReadOnly)
                       <a class="btn btn-warning btn-sm" href="{{route('jadwal.edit', $r->id)}}">Edit</a>&nbsp;&nbsp;
                       <a class="btn btn-danger btn-sm" href="#" data-toggle="modal" data-target="#konfirmDelete{{$r->id}}">Delete</a>
+                      @endif
                     </td>
                   </tr>
                   <div class="modal fade" id="konfirmDelete{{$r->id}}" tabindex="-1" role="dialog" aria-labelledby="{{$r->id}}" aria-hidden="true">

@@ -1,6 +1,8 @@
 @extends('layout.manajer.content')
 
 @section('top-menu')
+@php $isReadOnly = auth()->user()->manajer == 1 && auth()->user()->mitra == 1; @endphp
+@if(!$isReadOnly)
 <button type="button" class="btn btn-sm btn-default mt-0 ml-8" data-toggle="modal" data-target="#modal-form">Tambah
     CS</button>
 <div class="modal fade" id="modal-form" tabindex="-1" role="dialog" aria-labelledby="modal-form" aria-hidden="true">
@@ -36,6 +38,7 @@
         </div>
     </div>
 </div>
+@endif
 @endsection
 
 @section('content')
@@ -72,7 +75,9 @@
                                 <th scope="col" class="sort" data-sort="name">NO <i class="fas fa-sort"></th>
                                 <th scope="col" class="sort">Nama<i class="fas fa-sort"></th>
                                 <th scope="col" class="sort">Email <i class="fas fa-sort"></th>
+                                @if(!$isReadOnly)
                                 <th scope="col" class="sort">Aksi</th>
+                                @endif
                             </tr>
                         </thead>
                         <tbody class="list">
@@ -82,12 +87,12 @@
                                 <td>{{$item->nama_user}}</td>
                                 <td>{{$item->email}}</td>
                                 <td>
-                                    {{-- <a class="btn btn-warning btn-sm"
-                                        href="{{route('cs.edit', $item->id)}}">Edit</a>&nbsp;&nbsp; --}}
+                                    @if(!$isReadOnly)
                                     <a class="btn btn-warning btn-sm" href="#" data-toggle="modal"
                                         data-target="#editModal{{$item->id}}">Edit</a>
                                     <a class="btn btn-danger btn-sm" href="#" data-toggle="modal"
                                         data-target="#konfirmDelete{{$item->id}}">Delete</a>
+                                    @endif
                                 </td>
                             </tr>
 

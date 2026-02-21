@@ -1,6 +1,8 @@
 @extends('layout.manajer.content')
 
 @section('top-menu')
+@php $isReadOnly = auth()->user()->manajer == 1 && auth()->user()->mitra == 1; @endphp
+@if(!$isReadOnly)
     <button type="button" class="btn btn-sm btn-default mt-0 ml-8" data-toggle="modal" data-target="#modal-form">Tambah
         Ruang</button>
     <div class="modal fade" id="modal-form" tabindex="-1" role="dialog" aria-labelledby="modal-form" aria-hidden="true">
@@ -59,6 +61,7 @@
             </div>
         </div>
     </div>
+@endif
 @endsection
 
 @section('content')
@@ -96,7 +99,9 @@
                                     <th scope="col" class="sort">Nama Ruang <i class="fas fa-sort"></th>
                                     <th scope="col" class="sort">Inventaris Sarana <i class="fas fa-sort"></th>
                                     <th scope="col" class="sort">Data AC <i class="fas fa-sort"></th>
+                                    @if(!$isReadOnly)
                                     <th scope="col" class="sort">Aksi</th>
+                                    @endif
                                 </tr>
                             </thead>
                             <tbody class="list">
@@ -119,14 +124,18 @@
                                                     class="fas fa-wrench"></i></a>
                                         </td>
                                         <td>
+                                            @if(!$isReadOnly)
                                             <a class="btn btn-warning btn-sm"
                                                 href="{{ route('ruang.edit', $r->id) }}">Edit</a>&nbsp;&nbsp;
+                                            @endif
                                             <button class="btn btn-info btn-sm" data-toggle="modal"
                                                 data-target="#barcode{{ $r->id }}">
                                                 Barcode
                                             </button>
+                                            @if(!$isReadOnly)
                                             <a class="btn btn-danger btn-sm" href="#" data-toggle="modal"
                                                 data-target="#konfirmDelete{{ $r->id }}">Delete</a>
+                                            @endif
                                         </td>
                                     </tr>
                                     {{-- Modal Delete --}}
