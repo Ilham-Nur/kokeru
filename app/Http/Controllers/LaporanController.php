@@ -27,7 +27,10 @@ class LaporanController extends Controller
     {
         if(isset($request->print)){ // pdf
             if($request->status==''){ // kalau default
-                $tgl = date('Y-m-d');       
+                $tgl = date('Y-m-d');
+                $awal = $tgl;
+                $akhir = $tgl;
+                $status = 'semua';
                 $laporan = DB::select("SELECT lap.id_jadwal, ruang.nama_ruang, users.nama_user 
                     FROM ruang LEFT JOIN jadwal ON ruang.id = jadwal.id_ruang
                     LEFT JOIN (SELECT * FROM laporan WHERE laporan.created_at LIKE '$tgl%') AS lap ON lap.id_jadwal = jadwal.id

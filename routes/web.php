@@ -75,6 +75,8 @@ Route::resource('ruang', RuangController::class);
 Route::resource('cs', CSController::class);
 Route::resource('jadwal', JadwalController::class);
 Route::resource('laporan', LaporanController::class);
+// routes/web.php
+Route::get('/laporan/print/{id}', [LaporanController::class, 'print'])->name('laporan.print');
 
 // halaman cs
 Route::prefix('cs')->middleware(['cs'])->group(function () {

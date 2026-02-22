@@ -1,144 +1,185 @@
 <?php ini_set('max_execution_time', 360)?>
 <!DOCTYPE html>
 <html>
+
 <head>
 	<title>Laporan Kokeru</title>
-	<style type="text/css">
+	<style>
+		@page {
+			margin: 20px 30px;
+		}
+
+		body {
+			font-family: Arial, Helvetica, sans-serif;
+			font-size: 11pt;
+			/* line-height 1.4 dihapus karena bikin DomPDF error numpuk */
+		}
+
 		table {
-    		border-collapse: collapse;
+			border-collapse: collapse;
+			width: 100%;
 		}
-		.table{
-		    width: 100%;
-		    margin-bottom: 0.5rem;
-		    margin-top: 1.9rem;
-		    color: #212529;
+
+		.table {
+			margin-top: 10px;
 		}
+
 		.table th,
-		.table td{
-		    padding: .75rem;
-		    vertical-align: top;
-		    border-top: 1px solid #dee2e6;
+		.table td {
+			padding: 6px;
+			border: 1px solid #dee2e6;
 		}
-		.table th{
-		    vertical-align: bottom;
-		    border-bottom: 2px solid #dee2e6;
+
+		.table th {
+			background: #f2f2f2;
 		}
-		.center{
+
+		.center {
 			text-align: center;
 		}
 	</style>
 </head>
+
 <body>
 	<?php
-		function hari($day){
-			switch ($day) {
-				case 'Sun':
-					$hari = 'Minggu';
-					break;
-				case 'Mon':
-					$hari = 'Senin';
-					break;
-				case 'Tue':
-					$hari = 'Selasa';
-					break;
-				case 'Wed':
-					$hari = 'Rabu';
-					break;
-				case 'Thu':
-					$hari = 'Kamis';
-					break;
-				case 'Fri':
-					$hari = 'Jumat';
-					break;
-				case 'Sat':
-					$hari = 'Sabtu';
-					break;
-			}
-			return $hari;
-		}
+function hari($day)
+{
+	switch ($day) {
+		case 'Sun':
+			return 'Minggu';
+		case 'Mon':
+			return 'Senin';
+		case 'Tue':
+			return 'Selasa';
+		case 'Wed':
+			return 'Rabu';
+		case 'Thu':
+			return 'Kamis';
+		case 'Fri':
+			return 'Jumat';
+		case 'Sat':
+			return 'Sabtu';
+	}
+}
+
+$path = public_path('assets/img/brand/LogoUIS.png');
+$type = pathinfo($path, PATHINFO_EXTENSION);
+$data = @file_get_contents($path);
+$base64Logo = $data ? 'data:image/' . $type . ';base64,' . base64_encode($data) : '';
 	?>
-	<div class="container">
-		<div class="row">
-			<div class="col-md-12" style="text-align: center">
-				<h3>Laporan Harian Kebersihan dan Kerapihan Ruangan Gedung Bersama Maju</h3>
-				<h3 style="margin-top:0px"><?=($awal==$akhir)?'Hari '.hari(date('D', strtotime($awal))) : ''?> Tanggal {{date('d F Y', strtotime($awal))}} <?=($awal!=$akhir) ? ' - '.date('d F Y', strtotime($akhir)) : ''?></h3>
-				<i style="margin-top:0px">Tanggal Cetak {{date('d F Y')}} Jam {{date('h:i')}} WIB</i>
-			</div>
-		</div>
-	</div>
-	<table class="table">
+
+	<table style="width:100%; border-bottom: 3px solid #000; padding-bottom: 10px; margin-bottom: 15px;">
 		<tr>
-			<th style="width:5%">No</th>
-			@if($awal!=$akhir)
-				<th style="width:15%">Tanggal</th>
-			@endif
-			<th style="width:15%">Ruang</th>
-			<th style="width:45%">Nama CS</th>
-			<th style="width:20%">Status</th>
+			<td style="width:15%; border:none; text-align:center; vertical-align:middle;">
+				@if($base64Logo)
+					<img src="{{ $base64Logo }}" style="height:80px; width:auto;">
+				@endif
+			</td>
+			<td style="width:85%; border:none; text-align:center; vertical-align:middle;">
+				<span style="font-size:12pt; font-weight:bold;">YAYASAN PENDIDIKAN IBNU SINA BATAM (YAPISTA)</span><br>
+				<span style="font-size:16pt; font-weight:bold;">UNIVERSITAS IBNU SINA (UIS)</span><br>
+				<span style="font-size:9pt;">Jalan Teuku Umar, Lubuk Baja, Kota Batam-Indonesia Telp. 0778 – 408
+					3113</span><br>
+				<span style="font-size:9pt;">Email : info@uis.ac.id / uibnusina@gmail.com &nbsp;|&nbsp; Website :
+					uis.ac.id</span>
+			</td>
 		</tr>
-		<?php $i = 1;?>
-            @if($status == 'sudah')
-                @foreach($laporan as $r)
-                    @if(isset($r->id_jadwal))
-                        <tr>
-                          <td class="center">{{$i}}</td>
-                          @if($awal!=$akhir)
-                            <td><?=(isset($r->date))?$r->date:date('Y-m-d')?></td>
-                          @endif
-                          <td class="center">{{$r->nama_ruang}}</td>
-                          <td> 
-                            {{(isset($r->nama_user)) ? $r->nama_user : 'Belum ada cs'}}
-                          </td>
-                          <td class="center">Bersih</td>
-                        </tr>
-                        <?php $i++; ?>
-                    @endif
-                @endforeach
-            @elseif($status == 'belum')
-                @foreach($laporan as $r)
-                    @if(!isset($r->id_jadwal))
-                        <tr>
-                          <td class="center">{{$i}}</td>
-                          @if($awal!=$akhir)
-                            <td><?=(isset($r->date))?$r->date:date('Y-m-d')?></td>
-                          @endif
-                          <td class="center">{{$r->nama_ruang}}</td>
-                          <td> 
-                            {{(isset($r->nama_user)) ? $r->nama_user : 'Belum ada cs'}}
-                          </td>
-                          <td class="center">Belum bersih</td>
-                        </tr>
-                        <?php $i++; ?>
-                    @endif
-                @endforeach
-            @else
-                @foreach($laporan as $r)
-                    <tr>
-                        <td class="center">{{$i}}</td>
-                        @if($awal!=$akhir)
-                            <td><?=(isset($r->date))?$r->date:date('Y-m-d')?></td>
-                          @endif
-                        <td class="center">{{$r->nama_ruang}}</td>
-                        <td> 
-                          {{(isset($r->nama_user)) ? $r->nama_user : 'Belum ada cs'}}
-                        </td>
-                        <td class="center">
-                          @if(isset($r->id_jadwal))
-                            Bersih
-                          @else
-                            Belum bersih
-                          @endif
-                        </td>
-                    </tr>
-                    <?php $i++; ?>
-                @endforeach
-            @endif
 	</table>
-	<hr style="border-top: 1px solid; color: #dee2e6">
-	<div style="padding-top: 10px; padding-left: 550px">
-		Approval<br><br><br><br><br>
-		{{Auth::user()->nama_user}}<br>
-		Manajer
-	</div>
+
+	<table style="width:100%; border:none; margin-bottom: 20px;">
+		<tr>
+			<td style="text-align:center; border:none;">
+				<b style="font-size:14pt; text-transform:uppercase;">
+					Laporan Harian Kebersihan dan Kerapihan Ruangan
+				</b>
+			</td>
+		</tr>
+		<tr>
+			<td style="text-align:center; border:none; padding-top: 8px; font-size:11pt;">
+				<?=($awal == $akhir) ? 'Hari ' . hari(date('D', strtotime($awal))) : ''?>
+				Tanggal {{date('d F Y', strtotime($awal))}}
+				<?=($awal != $akhir) ? ' s/d ' . date('d F Y', strtotime($akhir)) : ''?>
+			</td>
+		</tr>
+	</table>
+		<table class="table">
+			<tr>
+				<th class="center" style="width:5%">No</th>
+				@if($awal != $akhir)
+					<th style="width:15%">Tanggal</th>
+				@endif
+				<th class="center" style="width:15%">Ruang</th>
+				<th style="width:45%">Nama CS</th>
+				<th class="center" style="width:20%">Status</th>
+			</tr>
+			<?php $i = 1;?>
+			@if($status == 'sudah')
+				@foreach($laporan as $r)
+					@if(isset($r->id_jadwal))
+						<tr>
+							<td class="center">{{$i}}</td>
+							@if($awal != $akhir)
+								<td><?=(isset($r->date)) ? $r->date : date('Y-m-d')?></td>
+							@endif
+							<td class="center">{{$r->nama_ruang}}</td>
+							<td>{{(isset($r->nama_user)) ? $r->nama_user : 'Belum ada cs'}}</td>
+							<td class="center">Bersih</td>
+						</tr>
+						<?php $i++; ?>
+					@endif
+				@endforeach
+			@elseif($status == 'belum')
+				@foreach($laporan as $r)
+					@if(!isset($r->id_jadwal))
+						<tr>
+							<td class="center">{{$i}}</td>
+							@if($awal != $akhir)
+								<td><?=(isset($r->date)) ? $r->date : date('Y-m-d')?></td>
+							@endif
+							<td class="center">{{$r->nama_ruang}}</td>
+							<td>{{(isset($r->nama_user)) ? $r->nama_user : 'Belum ada cs'}}</td>
+							<td class="center">Belum bersih</td>
+						</tr>
+						<?php $i++; ?>
+					@endif
+				@endforeach
+			@else
+				@foreach($laporan as $r)
+					<tr>
+						<td class="center">{{$i}}</td>
+						@if($awal != $akhir)
+							<td><?=(isset($r->date)) ? $r->date : date('Y-m-d')?></td>
+						@endif
+						<td class="center">{{$r->nama_ruang}}</td>
+						<td>{{(isset($r->nama_user)) ? $r->nama_user : 'Belum ada cs'}}</td>
+						<td class="center">
+							@if(isset($r->id_jadwal)) Bersih @else Belum bersih @endif
+						</td>
+					</tr>
+					<?php $i++; ?>
+				@endforeach
+			@endif
+		</table>
+
+		<hr style="border-top: 1px solid #ccc; margin-top: 20px;">
+
+		<table style="width:100%; border:none; margin-top:15px;">
+			<tr>
+				<td style="width:50%; border:none; text-align:center;">
+					Batam, {{date('d F Y')}}<br>
+					<strong>Ka. Bid Sarpras</strong><br><br><br><br><br>
+					<u style="letter-spacing:2px;">_________________________</u><br>
+					Nup. _______________
+				</td>
+				<td style="width:50%; border:none; text-align:center;">
+					Batam, {{date('d F Y')}}<br>
+					<strong>Manajer</strong><br><br><br><br><br>
+					<u>{{Auth::user()->nama_user}}</u><br>
+					Manajer
+				</td>
+			</tr>
+		</table>
+
 </body>
+
 </html>
