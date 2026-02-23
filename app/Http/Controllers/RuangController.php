@@ -70,10 +70,10 @@ class RuangController extends Controller
     private function ensureQr(Ruang $ruang): void
     {
         if (!$ruang->scan_token) {
-            $ruang->scan_token = (string) Str::uuid();
+            $ruang->scan_token = Str::random(32);
         }
 
-        $url  = route('scan.token', $ruang->scan_token);
+        $url  = url('/scan/' . $ruang->scan_token);
         $path = "qrcode/ruang-{$ruang->id}.svg";
 
         $needGenerate = !$ruang->qr_path
@@ -81,7 +81,7 @@ class RuangController extends Controller
             || $ruang->qr_url !== $url;
 
         if ($needGenerate) {
-            $svg = QrCode::format('svg')->size(220)->generate($url);
+            $svg = QrCode::format('svg')->size(260)->generate($url);
             Storage::disk('public')->put($path, $svg);
 
             $ruang->qr_path = $path;

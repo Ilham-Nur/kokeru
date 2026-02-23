@@ -229,12 +229,13 @@
                                                 </div>
 
                                                 <div class="modal-body text-center">
-                                                    @php $url = route('scan.token', $r->id); @endphp
+                                                    @php $url = url('/scan/' . $r->scan_token); @endphp
 
                                                     <div id="printArea{{ $r->id }}">
                                                         <div style="font-weight:600; margin-bottom:8px;">
                                                             {{ $r->nama_ruang }}</div>
-                                                        {!! QrCode::size(180)->generate($url) !!}
+                                                        {!! QrCode::size(260)->generate($url) !!}
+                                                        <div class="mt-2 small text-muted" style="word-break: break-all;">{{ $url }}</div>
                                                         {{-- <div class="mt-2 small text-muted" style="word-break: break-all;">
                                                             {{ $url }}</div> --}}
                                                     </div>

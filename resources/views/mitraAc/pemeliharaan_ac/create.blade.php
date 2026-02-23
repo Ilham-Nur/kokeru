@@ -3,7 +3,7 @@
 @section('content')
 <div class="card">
     <div class="card-header">
-        <h3>Kontrol Ac Ruangan</h3>
+        <h3>Kontrol Ac Ruangan: {{ $ruang->nama_ruang }}</h3>
     </div>
     <div class="card-body">
         <form action="{{ route('mitra.pemeliharaan.store', ['id_ruang' => $id_ruang, 'id_ac' => $id_ac]) }}" method="POST">

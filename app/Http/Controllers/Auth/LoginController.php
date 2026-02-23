@@ -19,32 +19,29 @@ class LoginController extends Controller
 
     public function store(Request $request)
     {
-        // validation
         $this->validate($request, [
             'email' => 'required|email',
             'password' => 'required',
         ]);
 
-        // login attempt
         if (auth()->attempt($request->only('email', 'password'), $request->remember)) {
+            $request->session()->regenerate();
 
             $user = auth()->user();
 
             if ($user->manajer == 1 && $user->mitra == 1) {
-                // manajer read only
-                return redirect()->route('manajerread.dashboard');
-
-            } elseif ($user->manajer == 1) {
-                // manajer full akses
-                return redirect()->route('manajer.dashboard');
-
-            } elseif ($user->mitra == 1) {
-                // mitra
-                return redirect()->route('mitra.dashboard');
+                return redirect()->intended(route('manajerread.dashboard'));
             }
 
-            // default role
-            return redirect()->route('cs.dashboard');
+            if ($user->manajer == 1) {
+                return redirect()->intended(route('manajer.dashboard'));
+            }
+
+            if ($user->mitra == 1) {
+                return redirect()->intended(route('mitra.dashboard'));
+            }
+
+            return redirect()->intended(route('cs.dashboard'));
         }
 
         return back()->with('status', 'Anda belum mempunyai akun');

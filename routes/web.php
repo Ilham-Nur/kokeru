@@ -15,6 +15,7 @@ use App\Http\Controllers\InventarisController;
 use App\Http\Controllers\InventarisKondisiController;
 use App\Http\Controllers\MitraAcController;
 use App\Http\Controllers\PemeliharaanAcController;
+use App\Http\Controllers\ScanController;
 
 /*
 |--------------------------------------------------------------------------
@@ -36,6 +37,7 @@ Route::get('/logout', [LogoutController::class, 'store'])->name('auth.logout');
 // auth
 Route::get('/', [LoginController::class, 'index'])->middleware('guest')->name('auth.login');
 Route::post('/login', [LoginController::class, 'store'])->name('auth.login');
+Route::get('/scan/{token}', ScanController::class)->name('scan.token');
 
 // halaman manajer
 Route::prefix('manajer')->middleware(['manajer'])->group(function () {
@@ -103,9 +105,6 @@ Route::prefix('mitra')->middleware(['mitra'])->group(function () {
     Route::post('/pemeliharaan-ac/{id_ruang}/{id_ac}/create', [PemeliharaanAcController::class, 'store'])->name('mitra.pemeliharaan.store');
     Route::get('/pemeliharaan-ac/{id_ruang}/{id_pemeliharaan}/{id_ac}/edit', [PemeliharaanAcController::class, 'edit'])->name('mitra.pemeliharaan.edit');
     Route::put('/pemeliharaan-ac/{id_ruang}/{id_pemeliharaan}/{id_ac}/edit', [PemeliharaanAcController::class, 'update'])->name('mitra.pemeliharaan.update');
-    Route::get('/scan/{token}', [PemeliharaanAcController::class, 'scanByToken'])
-        ->middleware(['auth', 'mitra'])
-        ->name('scan.token');
 });
 
 Route::prefix('manajerread')->middleware(['manajerread'])->group(function () {

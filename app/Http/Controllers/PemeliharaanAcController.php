@@ -7,45 +7,48 @@ use App\Models\MaintananceAc;
 use App\Models\Ruang;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use PDO;
 
 class PemeliharaanAcController extends Controller
 {
     public function index($id_ruang)
     {
-        // $data_ac = DataAc::with('dataAcs')->where('ruang_id', $id_ruang)->latest()->get();
-        $data_user = Auth::user()->id;
-        $userId = Auth::user()->id;
+        $userId = Auth::id();
+
+        $ruang = Ruang::findOrFail($id_ruang);
+
         $data_ac = DataAc::with(['dataAcs' => function ($query) use ($userId) {
             $query->where('mitra', $userId);
         }])->where('ruang_id', $id_ruang)->get();
 
-        return view('mitraAc.pemeliharaan_ac.index', compact('id_ruang', 'data_ac'));
+        return view('mitraAc.pemeliharaan_ac.index', compact('id_ruang', 'data_ac', 'ruang'));
     }
 
     public function create($id_ruang, $id_ac)
     {
-        $ruang = Ruang::where('id', $id_ruang)->first();
-        $data_ac = DataAc::where('ruang_id', $id_ruang)->where('id', $id_ac)->first();
+        $ruang = Ruang::findOrFail($id_ruang);
+        $data_ac = DataAc::where('ruang_id', $id_ruang)->findOrFail($id_ac);
         $data_pemeliharaan = new MaintananceAc();
+
         return view('mitraAc.pemeliharaan_ac.create', compact('data_ac', 'ruang', 'id_ac', 'id_ruang', 'data_pemeliharaan'));
     }
 
     public function store($id_ruang, $id_ac, Request $request)
     {
+        Ruang::findOrFail($id_ruang);
+        DataAc::where('ruang_id', $id_ruang)->findOrFail($id_ac);
+
         $request->validate([
-            'tanggal'       => 'required',
+            'tanggal'       => 'required|date',
             'description'   => 'required',
-            'arus'          => 'required',
-            'tegangan'      => 'required',
-            'tekanan'       => 'required',
+            'arus'          => 'required|numeric',
+            'tegangan'      => 'required|numeric',
+            'tekanan'       => 'required|numeric',
             'remaks'        => 'required',
         ]);
 
-        $userId = Auth::user()->id;
         MaintananceAc::create([
             'data_ac_id'    => $id_ac,
-            'mitra'         => $userId,
+            'mitra'         => Auth::id(),
             'tanggal'       => $request->tanggal,
             'description'   => $request->description,
             'arus'          => $request->arus,
@@ -54,24 +57,20 @@ class PemeliharaanAcController extends Controller
             'remaks'        => $request->remaks,
         ]);
 
-        return redirect()->route('mitra.pemeliharaan.index', $id_ruang);
+        return redirect()->route('mitra.pemeliharaan.index', $id_ruang)
+            ->with('success', 'Data pemeliharaan berhasil disimpan.');
     }
 
     public function edit($id_ruang, $id_pemeliharaan, $id_ac)
     {
-        $ruang = Ruang::where('id', $id_ruang)->first();
-        $data_ac = DataAc::where('ruang_id', $id_ruang)->where('id', $id_ac)->first();
-        $data_pemeliharaan = MaintananceAc::where('id', $id_pemeliharaan)->first();
-        // dd($data_pemeliharaan);
+        $ruang = Ruang::findOrFail($id_ruang);
+        $data_ac = DataAc::where('ruang_id', $id_ruang)->findOrFail($id_ac);
+        $data_pemeliharaan = MaintananceAc::findOrFail($id_pemeliharaan);
+
         return view('mitraAc.pemeliharaan_ac.edit', compact('data_ac', 'ruang', 'id_ac', 'id_ruang', 'id_pemeliharaan', 'data_pemeliharaan'));
     }
 
-    public function update() {}
-
-
-    public function scanByToken($token)
+    public function update()
     {
-        $ruang = Ruang::where('scan_token', $token)->firstOrFail();
-        return redirect()->route('mitra.pemeliharaan.index', $ruang->id);
     }
 }
