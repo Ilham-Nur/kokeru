@@ -35,8 +35,11 @@ use App\Http\Controllers\ScanController;
 Route::get('/logout', [LogoutController::class, 'store'])->name('auth.logout');
 
 // auth
-Route::get('/', [LoginController::class, 'index'])->middleware('guest')->name('auth.login');
-Route::post('/login', [LoginController::class, 'store'])->name('auth.login');
+Route::get('/', function () {
+    return redirect()->route('auth.login');
+});
+Route::get('/login', [LoginController::class, 'index'])->middleware('guest')->name('auth.login');
+Route::post('/login', [LoginController::class, 'store'])->name('auth.login.store');
 Route::get('/scan/{token}', ScanController::class)->name('scan.token');
 
 // halaman manajer
