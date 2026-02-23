@@ -1,161 +1,205 @@
-# AGENTS.md — Project gatratrus
+# AGENTS.md — Project KOKERU
 
 Aturan kerja untuk AI (Codex)
 
----
+--------------------------------------------------------------------
 
-## 1. Tujuan
+1. TUJUAN
 
-Repository ini adalah project production.
+Repository ini adalah project aktif berbasis Laravel 8.
 
 AI hanya bertugas membantu pengembangan dengan perubahan seminimal mungkin,
 tanpa merusak stabilitas sistem.
 
 AI adalah asisten developer, bukan arsitek sistem.
 
-Stabilitas lebih penting daripada kreativitas.
+Stabilitas dan kompatibilitas lebih penting daripada kreativitas.
 
----
+Project ini tidak menggunakan VPS deployment.
+Branch main digunakan sebagai branch utama project.
 
-## 2. Environment Project
+--------------------------------------------------------------------
+
+2. ENVIRONMENT PROJECT
 
 Framework:
+- Laravel 8.83.29
 
-- Laravel 12.50.0
+PHP:
+- PHP 8.3.26
 
-Versi PHP:
-
-- Production (VPS): PHP 8.5.3
-- Local Development: PHP 8.3.26
+Testing:
+- PHPUnit 9.6.x
 
 Aturan kompatibilitas:
 
-- Semua kode HARUS kompatibel minimal dengan PHP 8.3
-- Jangan gunakan fitur khusus PHP 8.4 atau 8.5
-- Ikuti aturan composer: php ^8.2
-- Perubahan harus bisa berjalan baik di local dan production
+- Semua kode HARUS kompatibel dengan Laravel 8
+- Semua kode HARUS kompatibel dengan PHP 8.3
+- Jangan gunakan fitur Laravel 9/10/11/12
+- Jangan gunakan fitur PHP 8.4 atau lebih tinggi
+- Ikuti constraint composer: php ^7.3|^8.0
+- Hindari syntax modern yang berpotensi tidak stabil di Laravel 8
 
----
+--------------------------------------------------------------------
 
-## 3. Struktur Branch (WAJIB DIIKUTI)
+3. STRUKTUR BRANCH (WAJIB DIIKUTI)
 
-Branch yang digunakan:
+Branch utama:
+- main
 
-- prod → branch production (VPS pull dari sini)
-- dev → branch development (AI bekerja di sini)
+Branch lain yang pernah ada:
+- ilham (sudah merged ke main)
+- riyan (sudah merged ke main)
 
-Aturan:
+Aturan kerja AI:
 
-- DILARANG commit langsung ke prod
-- DILARANG membuat PR langsung ke prod
-- Semua pekerjaan harus berasal dari dev
-- Buat branch baru dari dev (misal: feature/nama-fitur)
-- Flow merge:
-  feature/\* → dev → prod (manual approval)
+- DILARANG commit langsung ke main
+- Selalu buat branch baru dari main
 
-VPS melakukan:
-git pull origin prod
+Format branch:
 
----
+- feature/nama-fitur
+- fix/nama-perbaikan
+- refactor/nama-area
 
-## 4. Batasan Perubahan
+Flow kerja:
+
+1. Buat branch dari main
+2. Kerjakan perubahan di branch tersebut
+3. Buat Pull Request ke main
+4. Merge dilakukan manual oleh developer
+
+--------------------------------------------------------------------
+
+4. BATASAN PERUBAHAN
+
+AI BOLEH mengubah:
+
+- app/
+- routes/
+- resources/
+- database/
+- tests/
 
 AI BOLEH:
 
-- Mengubah file di:
-  app/
-  routes/
-  resources/
-  database/
-  tests/
-
-- Menambahkan migration jika memang dibutuhkan
+- Menambahkan migration jika dibutuhkan
 - Menambahkan test
+- Refactor kecil jika aman
+- Perbaikan bug
+- Penambahan fitur sesuai instruksi
 
 AI TIDAK BOLEH:
 
-- Upgrade/downgrade Laravel
+- Upgrade Laravel
+- Downgrade Laravel
 - Mengubah versi PHP
-- Mengubah arsitektur besar
-- Mengganti pola project secara menyeluruh
-- Menambah package berat tanpa alasan jelas
+- Mengubah arsitektur besar project
+- Mengganti struktur folder
+- Mengubah file config tanpa instruksi
+- Menghapus middleware
+- Mengubah sistem authentication
+- Menambah package berat tanpa justifikasi
 
-Jika butuh package baru:
+Jika perlu package baru, WAJIB jelaskan:
 
-- Jelaskan alasan
-- Jelaskan dampaknya
-- Jelaskan alternatifnya
+- Alasan teknis
+- Dampak ke sistem
+- Alternatif tanpa package
 
----
+--------------------------------------------------------------------
 
-## 5. Standar Coding
+5. STANDAR CODING
 
-- Ikuti struktur dan pola yang sudah ada
+- Ikuti struktur Laravel 8
 - Controller harus tetap tipis
-- Logika bisnis mengikuti pola yang sudah digunakan di repo
+- Jangan taruh logic berat di Blade
 - Jangan duplikasi logic
-- Jangan buat pola baru tanpa alasan kuat
+- Jangan buat pola arsitektur baru tanpa instruksi
+- Ikuti pola yang sudah ada di project
 
 Validasi:
 
-- Gunakan FormRequest jika memang sudah digunakan di modul serupa
+- Gunakan FormRequest jika memang sudah digunakan
+- Jika tidak, gunakan $request->validate()
 
 Keamanan:
 
-- Jangan melemahkan authentication
+- Jangan melemahkan auth
 - Jangan menghapus middleware
-- Jangan mengubah policy tanpa instruksi
+- Jangan membuka akses data sensitif
+- Jangan ubah Gate/Policy tanpa instruksi
 
----
+--------------------------------------------------------------------
 
-## 6. Aturan Database
+6. ATURAN DATABASE
 
 - Jangan ubah struktur tabel tanpa migration
-- Migration harus bisa rollback (down() benar)
-- Jangan hardcode data penting di runtime
+- Migration WAJIB memiliki method down()
+- Jangan ubah kolom existing tanpa analisa dampak
+- Jangan hardcode data penting
 - Gunakan seeder jika perlu data default
 
----
+--------------------------------------------------------------------
 
-## 7. Quality Check (WAJIB SEBELUM SELESAI)
+7. QUALITY CHECK (WAJIB SEBELUM SELESAI)
 
-Sebelum task dianggap selesai:
+Project ini TIDAK menggunakan Laravel Pint.
 
-1. Jalankan formatter:
-   ./vendor/bin/pint
+Sebelum task selesai:
 
-2. Jalankan test:
+1. Jalankan test:
+
+   ./vendor/bin/phpunit
+
+   atau
+
    php artisan test
 
+2. Pastikan:
+
+- Tidak ada dd()
+- Tidak ada dump()
+- Tidak ada var_dump()
+- Tidak ada debug code
+- Tidak ada console.log di blade
+- Tidak ada unused import
+- Tidak ada syntax error
+- Tidak ada error PHP 8.3
+
 3. Pastikan:
-    - Tidak ada dd()
-    - Tidak ada dump()
-    - Tidak ada var_dump()
-    - Tidak ada debug code tersisa
-    - Tidak ada import tidak terpakai
 
----
+- Tidak ada breaking change
+- Tidak merusak fitur existing
+- Tidak mengubah behavior tanpa instruksi
 
-## 8. Definition of Done
+--------------------------------------------------------------------
 
-Task selesai jika:
+8. DEFINITION OF DONE
 
-- Tidak error
+Task dianggap selesai jika:
+
+- Tidak ada error
 - Test lulus
-- Format rapi
-- Tidak ada breaking change tidak sengaja
+- Tidak ada debug code
+- Tidak ada perubahan tidak disengaja
+- Tidak ada regression
 
-Output harus menyertakan:
+Output dari AI harus menyertakan:
 
 - Ringkasan perubahan
+- File yang diubah
 - Cara test
 - Asumsi yang digunakan (jika ada)
 
----
+--------------------------------------------------------------------
 
-## 9. Prinsip Utama
+9. PRINSIP UTAMA
 
-- Perubahan kecil lebih baik daripada perubahan besar
+- Perubahan kecil lebih aman daripada perubahan besar
 - Jangan sentuh file yang tidak relevan
-- Jangan mengubah konfigurasi production
-- Jika ragu, pilih pendekatan paling aman
+- Jangan mengubah konfigurasi tanpa instruksi
+- Jika ragu, pilih pendekatan paling konservatif
+- Stabilitas lebih penting daripada refactor besar
+
+--------------------------------------------------------------------
