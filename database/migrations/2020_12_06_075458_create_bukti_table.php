@@ -13,14 +13,11 @@ class CreateBuktiTable extends Migration
      */
     public function up()
     {
-        Schema::enableForeignKeyConstraints();
         Schema::create('bukti', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('id_laporan');
-            $table->foreign('id_laporan')->references('id')->on('laporan')
-                ->onUpdate('cascade')->onDelete('cascade');            
+            $table->foreignId('id_laporan'); // atau unsignedBigInteger tergantung settinganmu
             $table->string('nama_file');
-            $table->timestamps();
+            $table->text('deskripsi')->nullable(); 
         });
     }
 

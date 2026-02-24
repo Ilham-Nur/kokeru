@@ -9,92 +9,108 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\DB;
+use PDF;
 
 class MitraAcController extends Controller
 {
-   public function index_manajer(){
-      $mitra = User::where('mitra', 1)->latest()->get();
-    return view('manajer.mitra-ac', compact('mitra'));
-   }
-
-   public function store(Request $request)
+    public function index_manajer(Request $request) // <- Tambahkan Request $request
     {
-      // dd($request->all());
+        // Ambil yang mitra = 1 TAPI manajer harus = 0
+        $mitra = User::where('mitra', 1)
+            ->where('manajer', 0)
+            ->latest()
+            ->get();
+
+        // --- LOGIKA JIKA TOMBOL PRINT DIKLIK ---
+        if($request->has('print') && $request->print == 'pdf'){
+            $pdf = PDF::loadView('manajer.mitraac-pdf', compact('mitra'));
+            return $pdf->stream('Data_Mitra_AC.pdf', array('Attachment' => false));
+        }
+
+        return view('manajer.mitra-ac', compact('mitra'));
+    }
+
+    public function store(Request $request)
+    {
+        // dd($request->all());
         $request->validate([
             'nama_user' => 'required',
             'email' => 'required',
         ]);
-        
+
         $rand = Str::random(8);
         $pw = bcrypt($rand);
         $store = User::create([
-         'nama_user'    => $request->nama_user,
-         'email'        => $request->email,
-         'password'     => $pw,
-         'mitra'        => 1,
+            'nama_user' => $request->nama_user,
+            'email' => $request->email,
+            'password' => $pw,
+            'mitra' => 1,
         ]);
-        if($store){
+        if ($store) {
             $details = [
-                'title'    => 'Akun Cleaning Service Universitas Ibnu Sina',
-                'nama'     => $request->nama_user,
-                'email'    => $request->email,
-                'pass'     => $rand,
+                'title' => 'Akun Cleaning Service Universitas Ibnu Sina',
+                'nama' => $request->nama_user,
+                'email' => $request->email,
+                'pass' => $rand,
             ];
             // send email
             \Mail::to($request->email)->send(new \App\Mail\SendPassword($details));
 
             return redirect()->route('manajer.mitra.index')
-                             ->with('success','Data cs berhasil ditambahkan');
-        } else{
+                ->with('success', 'Data cs berhasil ditambahkan');
+        } else {
             return redirect()->route('manajer.mitra.index')
-                             ->with('failed','Data cs gagal ditambahkan');
+                ->with('failed', 'Data cs gagal ditambahkan');
         }
     }
 
-    public function update($id_user, Request $request){
-      $request->validate([
-         'nama_user' => 'required',
-         'email' => 'required',
-     ]);
-     
-     $rand = Str::random(8);
-     $pw = bcrypt($rand);
-     $mitra = User::where('id', $id_user)->first();
-     $store = $mitra->update([
-      'nama_user'    => $request->nama_user,
-      'email'        => $request->email,
-      'password'     => $pw,
-      'mitra'        => 1,
-     ]);
-     if($store){
-         $details = [
-             'title'    => 'Akun Cleaning Service Universitas Ibnu Sina',
-             'nama'     => $request->nama_user,
-             'email'    => $request->email,
-             'pass'     => $rand,
-         ];
-         // send email
-         \Mail::to($request->email)->send(new \App\Mail\SendPassword($details));
+    public function update($id_user, Request $request)
+    {
+        $request->validate([
+            'nama_user' => 'required',
+            'email' => 'required',
+        ]);
 
-         return redirect()->route('manajer.mitraac.index')
-                          ->with('success','Data cs berhasil Dirubah');
-     } else{
-         return redirect()->route('manajer.mitraac.index')
-                          ->with('failed','Data cs gagal Dirubah');
-     }
+        $rand = Str::random(8);
+        $pw = bcrypt($rand);
+        $mitra = User::where('id', $id_user)->first();
+        $store = $mitra->update([
+            'nama_user' => $request->nama_user,
+            'email' => $request->email,
+            'password' => $pw,
+            'mitra' => 1,
+        ]);
+        if ($store) {
+            $details = [
+                'title' => 'Akun Cleaning Service Universitas Ibnu Sina',
+                'nama' => $request->nama_user,
+                'email' => $request->email,
+                'pass' => $rand,
+            ];
+            // send email
+            \Mail::to($request->email)->send(new \App\Mail\SendPassword($details));
+
+            return redirect()->route('manajer.mitraac.index')
+                ->with('success', 'Data cs berhasil Dirubah');
+        } else {
+            return redirect()->route('manajer.mitraac.index')
+                ->with('failed', 'Data cs gagal Dirubah');
+        }
     }
 
-    public function destroy($id_user){
-      User::where('id', $id_user)->delete();
-      return redirect()->back();
+    public function destroy($id_user)
+    {
+        User::where('id', $id_user)->delete();
+        return redirect()->back();
     }
     // Mitra view
-    public function index(){
-         // waktu 
-         Carbon::setLocale('id');
-         $time = Carbon::now()->formatLocalized("%A, %d %B %Y");
-         $count = Ruang::count();
-         $ruang = Ruang::latest()->get();
-         return view('mitraAc.dashboard',['count' => $count, 'ruang' => $ruang, 'time' => $time,]);
+    public function index()
+    {
+        // waktu 
+        Carbon::setLocale('id');
+        $time = Carbon::now()->formatLocalized("%A, %d %B %Y");
+        $count = Ruang::count();
+        $ruang = Ruang::latest()->get();
+        return view('mitraAc.dashboard', ['count' => $count, 'ruang' => $ruang, 'time' => $time,]);
     }
 }
