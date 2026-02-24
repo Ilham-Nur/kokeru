@@ -75,8 +75,8 @@
               <thead class="thead-light">
                 <tr>
                   <th scope="col">No</th>
-                  <th scope="col" class="sort">Ruang<i class="fas fa-sort"></th>
-                  <th scope="col" class="sort">Nama CS<i class="fas fa-sort"></th>
+                  <th scope="col" class="sort">Ruang <i class="fas fa-sort"></i></th>
+                  <th scope="col" class="sort">Nama CS <i class="fas fa-sort"></i></th>
                   @if(!$isReadOnly)
                     <th scope="col" class="sort">Aksi</th>
                   @endif
@@ -89,44 +89,16 @@
                     <th scope="row">{{$i}}</th>
                     <td>{{$r->nama_ruang}}</td>
                     <td>{{$r->nama_user}}</td>
-                    <td>
-                      @if(!$isReadOnly)
+
+                    @if(!$isReadOnly)
+                      <td>
                         <a class="btn btn-warning btn-sm" href="{{route('jadwal.edit', $r->id)}}">Edit</a>&nbsp;&nbsp;
                         <a class="btn btn-danger btn-sm" href="#" data-toggle="modal"
                           data-target="#konfirmDelete{{$r->id}}">Delete</a>
-                      @endif
-                    </td>
+                      </td>
+                    @endif
+
                   </tr>
-                  <div class="modal fade" id="konfirmDelete{{$r->id}}" tabindex="-1" role="dialog"
-                    aria-labelledby="{{$r->id}}" aria-hidden="true">
-                    <div class="modal-dialog modal- modal-dialog-centered modal-sm" role="document">
-                      <div class="modal-content">
-                        <div class="modal-header">
-                          <h5 class="modal-title" id="exampleModalLabel">Konfirmasi</h5>
-                          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                          </button>
-                        </div>
-                        <div class="modal-body p-0">
-                          <div class="card bg-secondary border-0 mb-0">
-                            <div class="card-body px-lg-5 py-lg-5">
-                              <div class=" text-default mb-0">
-                                Anda yakin ingin menghapus data jadwal ini ?
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                        <div class="modal-footer">
-                          <form action="{{ route('jadwal.destroy', $r->id) }}" method="POST">
-                            @csrf
-                            @method('DELETE')
-                            <button type="submit" class="btn btn-danger">Hapus</button>
-                          </form>
-                          <a href="button" class="btn btn-secondary" data-dismiss="modal">Batal</a>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
                   <?php  $i++;?>
                 @endforeach
               </tbody>
