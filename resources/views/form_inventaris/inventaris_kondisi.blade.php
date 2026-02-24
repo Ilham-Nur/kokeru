@@ -1,9 +1,12 @@
-<div class="card">
-    <div class="card-header">Data Kondisi Inventaris Bulan {{ $bulan }}
-    </div>
-    <div class="card-body">
+@php $isReadOnly = auth()->user()->manajer == 1 && auth()->user()->mitra == 1; @endphp
 
-        <div class="row">
+<div class="card">
+    <div class="card-header border-0">
+        <h3 class="mb-0">Data Kondisi Inventaris Bulan {{ $bulan }}</h3>
+    </div>
+    
+    <div class="card-body mt-0 pt-0">
+        <div class="row mt-3">
             <div class="col-6">
                 <div class="mb-3">
                     <label for="ruangan" class="form-label">Ruangan</label>
@@ -41,28 +44,36 @@
         </ul>
     </div>
     @endif
-    <div class="card-header">Tabel Data Inventaris</div>
-    <div class="card-body">
-        <div>
-            <table class="w-100 table table-bordered table-responsive-xl" id="data">
-                <thead>
+    
+    <div class="card-header border-0 d-flex justify-content-between align-items-center">
+        <h3 class="mb-0">Tabel Data Inventaris</h3>
+        
+        <a href="{{ url()->previous() }}" class="btn btn-secondary">Kembali</a>
+    </div>
+
+    <div class="card-body mt-0 pt-0">
+        <div class="table-responsive">
+            <table class="table table-bordered table-flush" id="data">
+                <thead class="thead-light">
                     <tr class="text-center">
                         <th>No</th>
-                        <td>Sarana</td>
-                        <td>Bulan</td>
-                        <td>kuantiti</td>
-                        <td>kondisi</td>
-                        <td>dipinjam</td>
-                        <td>mutasi</td>
-                        <td>user</td>
-                        <td>sign</td>
-                        <td>Aksi</td>
+                        <th>Sarana</th>
+                        <th>Bulan</th>
+                        <th>Kuantiti</th>
+                        <th>Kondisi</th>
+                        <th>Dipinjam</th>
+                        <th>Mutasi</th>
+                        <th>User</th>
+                        <th>Sign</th>
+                        {{-- Sembunyikan kolom Aksi jika Read Only --}}
+                        @if(!$isReadOnly)
+                        <th>Aksi</th>
+                        @endif
                     </tr>
                 </thead>
                 <tbody>
 
                     @foreach ( $saranas as $item)
-                    {{-- {{ $item->inventarisKondisi->bulan === $bulanAngka }} --}}
                     @php
                     $kondisi = $item->inventarisKondisis->first();
                     @endphp
@@ -72,6 +83,7 @@
                         <td>
                             {{ $bulan }}
                         </td>
+                        
                         <td>
                             @isset($kondisi)
                             {{ $kondisi->kuantiti }}
@@ -80,131 +92,40 @@
 
                         <td>
                             @isset($kondisi)
-                            {{ $kondisi->kondisi }}
+                            <i class="fas fa-{{ ($kondisi->kondisi) ? 'check' : 'times' }}"></i>
                             @endisset
                         </td>
                         <td>
                             @isset($kondisi)
-                            {{ $kondisi->dipinjam }}
+                            <i class="fas fa-{{ ($kondisi->dipinjam) ? 'check' : 'times' }}"></i>
                             @endisset
                         </td>
                         <td>
                             @isset($kondisi)
-                            {{ $kondisi->mutasi }}
+                            <i class="fas fa-{{ ($kondisi->mutasi) ? 'check' : 'times' }}"></i>
                             @endisset
                         </td>
                         <td>
                             @isset($kondisi)
-                            {{ $kondisi->user }}
+                            <i class="fas fa-{{ ($kondisi->user) ? 'check' : 'times' }}"></i>
                             @endisset
                         </td>
                         <td>
                             @isset($kondisi)
-                            {{ $kondisi->sign }}
+                            <i class="fas fa-{{ ($kondisi->sign) ? 'check' : 'times' }}"></i>
                             @endisset
                         </td>
+                        
+                        {{-- Sembunyikan tombol Kontrol jika Read Only --}}
+                        @if(!$isReadOnly)
                         <td>
                             <button type="button" class="btn btn-sm btn-info" data-toggle="modal"
                                 data-target="#kontrol{{ $item->id }}">
                                 Kontrol
                             </button>
                         </td>
+                        @endif
                     </tr>
-                    {{-- @endforeach
-                    @foreach ( $sarana as $item) --}}
-                    <!-- Modal Kontrol-->
-                    <div class="modal fade" id="kontrol{{ $item->id }}" data-backdrop="static" data-keyboard="false"
-                        tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-                        <div class="modal-dialog modal-dialog-centered modal-md">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <h5 class="modal-title" id="staticBackdropLabel">Form Kontrol Data Sarana</h5>
-                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                        <span aria-hidden="true">&times;</span>
-                                    </button>
-                                </div>
-                                <div class="modal-body">
-                                    {{-- {{ dd(Auth::user()->manajer) }} --}}
-                                    @if (Auth::user()->manajer === 1 )
-                                    <form
-                                        action="{{ route('manajer.inventaris.kondisi.store', ['id_sarana' => $item->id, 'bulan' => $bulan]) }}"
-                                        method="POST" enctype="multipart/form-data">
-                                        @else
-                                        <form
-                                            action="{{ route('cs.inventaris.kondisi.store', ['id_sarana' => $item->id, 'bulan' => $bulan]) }}"
-                                            method="POST" enctype="multipart/form-data">
-                                            @endif
-                                            @csrf
-                                            {{-- {{ $item->inventarisKondisi === $bulanAngka }} --}}
-                                            <div class="form-group row">
-                                                <label for="id_sarana"
-                                                    class="col-sm-4 font-weight-bold col-form-label">Nama
-                                                    Sarana</label>
-                                                <div class="col-sm-8">
-                                                    <input type="text" name="id_sarana" class="form-control border-none"
-                                                        id="id_sarana" value="{{ $item->nama_sarana }}" readonly>
-                                                </div>
-                                            </div>
-                                            <div class="form-group row">
-                                                <label class="col-sm-4 font-weight-bold col-form-label">
-                                                    Kuantiti
-                                                </label>
-                                                <div class="col-sm-8">
-                                                    <input type="number" name="kuantiti" min="1" max="20"
-                                                        class="form-control"
-                                                        value="{{ isset($kondisi) ? $kondisi->kuantiti : '' }}"
-                                                        required>
-                                                </div>
-                                            </div>
-
-                                            <div class="form-group row">
-                                                <label class="col-sm-4 font-weight-bold col-form-label">Kondisi</label>
-                                                <div class="col-sm-8">
-                                                    <input type="number" name="kondisi" min="1" max="20" class="form-control"
-                                                        value="{{ isset($kondisi) ? $kondisi->kondisi : '' }}" required>
-                                                </div>
-                                            </div>
-                                            <div class="form-group row">
-                                                <label class="col-sm-4 font-weight-bold col-form-label">Dipinjam</label>
-                                                <div class="col-sm-8">
-                                                    <input type="number" name="dipinjam" min="1" max="20" class="form-control"
-                                                        value="{{ isset($kondisi) ? $kondisi->dipinjam : '' }}" required>
-                                                </div>
-                                            </div>
-                                            <div class="form-group row">
-                                                <label class="col-sm-4 font-weight-bold col-form-label">Mutasi</label>
-                                                <div class="col-sm-8">
-                                                    <input type="number" name="mutasi" min="1" max="20" class="form-control"
-                                                        value="{{ isset($kondisi) ? $kondisi->mutasi : '' }}" required>
-                                                </div>
-                                            </div>
-                                            <div class="form-group row">
-                                                <label class="col-sm-4 font-weight-bold col-form-label">User</label>
-                                                <div class="col-sm-8">
-                                                    <input type="number" name="user" min="1" max="20" class="form-control"
-                                                        value="{{ isset($kondisi) ? $kondisi->user : '' }}" required>
-                                                </div>
-                                            </div>
-                                            <div class="form-group row">
-                                                <label class="col-sm-4 font-weight-bold col-form-label">Sign</label>
-                                                <div class="col-sm-8">
-                                                    <input type="number" name="sign" min="1" max="20" class="form-control"
-                                                        value="{{ isset($kondisi) ? $kondisi->sign : '' }}" required>
-                                                </div>
-                                            </div>
-                                            <div class="border-top border-bold border-dark mb-2"></div>
-                                            <div class="d-flex justify-content-center ">
-                                                <button type="button" class="btn btn-warning"
-                                                    data-dismiss="modal">Tutup</button>
-                                                <button type="submit" class="btn btn-success">Simpan</button>
-                                            </div>
-                                        </form>
-
-                                </div>
-
-                            </div>
-                        </div>
-                    </div>
                     @endforeach
                 </tbody>
             </table>
@@ -212,3 +133,214 @@
 
     </div>
 </div>
+
+{{-- MODAL KONTROL DIKELUARKAN DARI DALAM TABEL DAN HANYA DIMUNCULKAN JIKA BUKAN READ ONLY --}}
+@if(!$isReadOnly)
+    @foreach ( $saranas as $item)
+        @php
+        $kondisi = $item->inventarisKondisis->first();
+        @endphp
+        <div class="modal fade" id="kontrol{{ $item->id }}" data-backdrop="static" data-keyboard="false"
+            tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-md">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="staticBackdropLabel">Form Kontrol Data Sarana</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        @if (Auth::user()->manajer === 1 )
+                        <form
+                            action="{{ route('manajer.inventaris.kondisi.store', ['id_sarana' => $item->id, 'bulan' => $bulan]) }}"
+                            method="POST" enctype="multipart/form-data">
+                            @else
+                            <form
+                                action="{{ route('cs.inventaris.kondisi.store', ['id_sarana' => $item->id, 'bulan' => $bulan]) }}"
+                                method="POST" enctype="multipart/form-data">
+                                @endif
+                                @csrf
+                                
+                                <div class="form-group row">
+                                    <label for="id_sarana"
+                                        class="col-sm-4 font-weight-bold col-form-label">Nama
+                                        Sarana</label>
+                                    <div class="col-sm-8">
+                                        <input type="text" name="id_sarana" class="form-control border-none"
+                                            id="id_sarana" value="{{ $item->nama_sarana }}" readonly>
+                                    </div>
+                                </div>
+
+                                <div class="form-group row">
+                                    <label class="col-sm-4 font-weight-bold col-form-label">
+                                        Kuantiti
+                                    </label>
+                                    <div class="col-sm-8">
+                                        <input type="number" name="kuantiti" min="0" class="form-control"
+                                            value="{{ isset($kondisi) ? $kondisi->kuantiti : '' }}" required placeholder="Masukkan Jumlah">
+                                    </div>
+                                </div>
+
+                                <fieldset class="form-group row">
+                                    <legend
+                                        class="col-form-label col-sm-4 font-weight-bold float-sm-left pt-0">
+                                        Kondisi
+                                    </legend>
+                                    <div class="col-sm-8">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="radio" name="kondisi"
+                                                id="kondisi_ya{{ $item->id }}" value="1" @isset($kondisi) {{
+                                                ($kondisi->kondisi === 1) ? 'checked' : '' }}
+                                            @endisset
+                                            >
+                                            <label class="form-check-label" for="kondisi_ya{{ $item->id }}">
+                                                Ya
+                                            </label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="radio" name="kondisi"
+                                                id="kondisi_tidak{{ $item->id }}" value="0" @isset($kondisi)
+                                                {{ ($kondisi->kondisi === 0) ? 'checked' : '' }}
+                                            @endisset
+                                            >
+                                            <label class="form-check-label"
+                                                for="kondisi_tidak{{ $item->id }}">
+                                                Tidak
+                                            </label>
+                                        </div>
+                                    </div>
+                                </fieldset>
+                                
+                                <fieldset class="form-group row">
+                                    <legend
+                                        class="col-form-label col-sm-4 font-weight-bold float-sm-left pt-0">
+                                        Dipinjam
+                                    </legend>
+                                    <div class="col-sm-8">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="radio" name="dipinjam"
+                                                id="dipinjam_ya{{ $item->id }}" value="1" @isset($kondisi)
+                                                {{ ($kondisi->dipinjam === 1) ? 'checked' : '' }}
+                                            @endisset
+                                            >
+                                            <label class="form-check-label"
+                                                for="dipinjam_ya{{ $item->id }}">
+                                                Ya
+                                            </label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="radio" name="dipinjam"
+                                                id="dipinjam_tidak{{ $item->id }}" value="0"
+                                                @isset($kondisi) {{ ($kondisi->dipinjam === 0) ? 'checked' :
+                                            '' }}
+                                            @endisset
+                                            >
+                                            <label class="form-check-label"
+                                                for="dipinjam_tidak{{ $item->id }}">
+                                                Tidak
+                                            </label>
+                                        </div>
+                                    </div>
+                                </fieldset>
+                                
+                                <fieldset class="form-group row">
+                                    <legend
+                                        class="col-form-label col-sm-4 font-weight-bold float-sm-left pt-0">
+                                        Mutasi
+                                    </legend>
+                                    <div class="col-sm-8">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="radio" name="mutasi"
+                                                id="mutasi_ya{{ $item->id }}" value="1" @isset($kondisi) {{
+                                                ($kondisi->mutasi === 1) ? 'checked' : '' }}
+                                            @endisset
+                                            >
+                                            <label class="form-check-label" for="mutasi_ya{{ $item->id }}">
+                                                Ya
+                                            </label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="radio" name="mutasi"
+                                                id="mutasi_tidak{{ $item->id }}" value="0" @isset($kondisi)
+                                                {{ ($kondisi->mutasi === 0) ? 'checked' : '' }}
+                                            @endisset
+                                            >
+                                            <label class="form-check-label"
+                                                for="mutasi_tidak{{ $item->id }}">
+                                                Tidak
+                                            </label>
+                                        </div>
+                                    </div>
+                                </fieldset>
+                                
+                                <fieldset class="form-group row">
+                                    <legend
+                                        class="col-form-label col-sm-4 font-weight-bold float-sm-left pt-0">
+                                        User</legend>
+                                    <div class="col-sm-8">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="radio" name="user"
+                                                id="user_ya{{ $item->id }}" value="1" @isset($kondisi) {{
+                                                ($kondisi->user === 1) ? 'checked' : '' }}
+                                            @endisset
+                                            >
+                                            <label class="form-check-label" for="user_ya{{ $item->id }}">
+                                                Ya
+                                            </label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="radio" name="user"
+                                                id="user_tidak{{ $item->id }}" value="0" @isset($kondisi) {{
+                                                ($kondisi->user === 0) ? 'checked' : '' }}
+                                            @endisset
+                                            >
+                                            <label class="form-check-label" for="user_tidak{{ $item->id }}">
+                                                Tidak
+                                            </label>
+                                        </div>
+                                    </div>
+                                </fieldset>
+                                
+                                <fieldset class="form-group row">
+                                    <legend
+                                        class="col-form-label col-sm-4 font-weight-bold float-sm-left pt-0">
+                                        Sign</legend>
+                                    <div class="col-sm-8">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="radio" name="sign"
+                                                id="sign_ya{{ $item->id }}" value="1" @isset($kondisi) {{
+                                                ($kondisi->sign === 1) ? 'checked' : '' }}
+                                            @endisset
+                                            >
+                                            <label class="form-check-label" for="sign_ya{{ $item->id }}">
+                                                Ya
+                                            </label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="radio" name="sign"
+                                                id="sign_tidak{{ $item->id }}" value="0" @isset($kondisi) {{
+                                                ($kondisi->sign === 0) ? 'checked' : '' }}
+                                            @endisset
+                                            >
+                                            <label class="form-check-label" for="sign_tidak{{ $item->id }}">
+                                                Tidak
+                                            </label>
+                                        </div>
+                                    </div>
+                                </fieldset>
+                                <div class="border-top border-bold border-dark mb-2"></div>
+                                <div class="d-flex justify-content-center ">
+                                    <button type="button" class="btn btn-warning mr-2"
+                                        data-dismiss="modal">Tutup</button>
+                                    <button type="submit" class="btn btn-success">Simpan</button>
+                                </div>
+                            </form>
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    @endforeach
+@endif

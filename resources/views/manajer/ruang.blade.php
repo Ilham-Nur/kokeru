@@ -2,6 +2,8 @@
 
 @section('top-menu')
 @php $isReadOnly = auth()->user()->manajer == 1 && auth()->user()->mitra == 1; @endphp
+
+{{-- Tombol Tambah Hanya Muncul Jika Bukan Mitra AC --}}
 @if(!$isReadOnly)
     <button type="button" class="btn btn-sm btn-default mt-0 ml-8" data-toggle="modal" data-target="#modal-form">Tambah
         Ruang</button>
@@ -65,7 +67,6 @@
 @endsection
 
 @section('content')
-    <!-- Page content -->
     <div class="container-fluid mt--6">
         <div class="row">
             <div class="col">
@@ -86,22 +87,19 @@
                     </div>
                 @endif
                 <div class="card pb-5">
-                    <!-- Card header -->
                     <div class="card-header border-0">
                         <h3 class="mb-0">Data Ruang</h3>
                     </div>
-                    <!-- Light table -->
                     <div class="table-responsive">
                         <table class="table align-items-center table-flush" id="data">
                             <thead class="thead-light">
                                 <tr class="text-center">
-                                    <th scope="col" class="sort" data-sort="name">ID <i class="fas fa-sort"></th>
-                                    <th scope="col" class="sort">Nama Ruang <i class="fas fa-sort"></th>
-                                    <th scope="col" class="sort">Inventaris Sarana <i class="fas fa-sort"></th>
-                                    <th scope="col" class="sort">Data AC <i class="fas fa-sort"></th>
-                                    @if(!$isReadOnly)
+                                    <th scope="col" class="sort" data-sort="name">ID <i class="fas fa-sort"></i></th>
+                                    <th scope="col" class="sort">Nama Ruang <i class="fas fa-sort"></i></th>
+                                    <th scope="col" class="sort">Inventaris Sarana <i class="fas fa-sort"></i></th>
+                                    <th scope="col" class="sort">Data AC <i class="fas fa-sort"></i></th>
+                                    {{-- KOLOM AKSI DIBUKA UNTUK SEMUA ROLE (KARENA ADA TOMBOL BARCODE) --}}
                                     <th scope="col" class="sort">Aksi</th>
-                                    @endif
                                 </tr>
                             </thead>
                             <tbody class="list">
@@ -128,127 +126,19 @@
                                             <a class="btn btn-warning btn-sm"
                                                 href="{{ route('ruang.edit', $r->id) }}">Edit</a>&nbsp;&nbsp;
                                             @endif
+                                            
+                                            {{-- Barcode selalu muncul untuk semua --}}
                                             <button class="btn btn-info btn-sm" data-toggle="modal"
                                                 data-target="#barcode{{ $r->id }}">
                                                 Barcode
                                             </button>
+                                            
                                             @if(!$isReadOnly)
                                             <a class="btn btn-danger btn-sm" href="#" data-toggle="modal"
                                                 data-target="#konfirmDelete{{ $r->id }}">Delete</a>
                                             @endif
                                         </td>
                                     </tr>
-                                    {{-- Modal Delete --}}
-                                    <div class="modal fade" id="konfirmDelete{{ $r->id }}" tabindex="-1"
-                                        role="dialog" aria-labelledby="{{ $r->id }}" aria-hidden="true">
-                                        <div class="modal-dialog modal- modal-dialog-centered modal-sm" role="document">
-                                            <div class="modal-content">
-                                                <div class="modal-header">
-                                                    <h5 class="modal-title" id="exampleModalLabel">Konfirmasi</h5>
-                                                    <button type="button" class="close" data-dismiss="modal"
-                                                        aria-label="Close">
-                                                        <span aria-hidden="true">&times;</span>
-                                                    </button>
-                                                </div>
-                                                <div class="modal-body p-0">
-                                                    <div class="card bg-secondary border-0 mb-0">
-                                                        <div class="card-body px-lg-5 py-lg-5">
-                                                            <div class=" text-default mb-0">
-                                                                Anda yakin ingin menghapus data ruang {{ $r->nama_ruang }}
-                                                                ?
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="modal-footer">
-                                                    <form action="{{ route('ruang.destroy', $r->id) }}" method="POST">
-                                                        @csrf
-                                                        @method('DELETE')
-                                                        <button type="submit" class="btn btn-danger">Hapus</button>
-                                                    </form>
-                                                    <a href="button" class="btn btn-secondary"
-                                                        data-dismiss="modal">Batal</a>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <!-- Modal Inventaris-->
-                                    <div class="modal fade" id="inventaris{{ $r->id }}" data-backdrop="static"
-                                        data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel"
-                                        aria-hidden="true">
-                                        <div class="modal-dialog modal-dialog-centered modal-sm">
-                                            <div class="modal-content">
-                                                <div class="modal-header">
-                                                    <h4 class="modal-title" id="staticBackdropLabel">Data Inventaris</h4>
-                                                    <button type="button" class="close" data-dismiss="modal"
-                                                        aria-label="Close">
-                                                        <span aria-hidden="true">&times;</span>
-                                                    </button>
-                                                </div>
-                                                <div class="modal-body">
-                                                    <div class="container">
-                                                        <div>
-                                                            <h4>Ruangan : <span
-                                                                    class="text-muted">{{ $r->nama_ruang }}</span></h4>
-                                                            <h4>Pj Ruangan : <span class="text-muted">AMIN</span></h4>
-                                                            <h4>Tahun : <span class="text-muted">2024</span></h4>
-                                                        </div>
-
-                                                        <div class="my-4">
-                                                            <h4>Bulan</h4>
-                                                            <div class="row">
-                                                                <div class="row">
-                                                                    @foreach ($bulanList as $bulan)
-                                                                        @php
-                                                                            $bulanSingkat = substr($bulan, 0, 3); // Mengambil tiga karakter pertama dari nama bulan
-                                                                        @endphp
-                                                                        <div class="col-md-4">
-                                                                            <a href="{{ route('inventaris.bulan', ['bulan' => $bulan, 'id_ruang' => $r->id]) }}"
-                                                                                class="btn btn-success my-2 w-100">{{ $bulanSingkat }}</a>
-                                                                        </div>
-                                                                    @endforeach
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    {{-- Modal Barcode --}}
-                                    <div class="modal fade" id="barcode{{ $r->id }}" tabindex="-1"
-                                        role="dialog" aria-hidden="true">
-                                        <div class="modal-dialog modal-dialog-centered modal-sm" role="document">
-                                            <div class="modal-content">
-                                                <div class="modal-header">
-                                                    <h5 class="modal-title">QR Ruangan: {{ $r->nama_ruang }}</h5>
-                                                    <button type="button" class="close"
-                                                        data-dismiss="modal"><span>&times;</span></button>
-                                                </div>
-
-                                                <div class="modal-body text-center">
-                                                    @php $url = route('scan.token', $r->id); @endphp
-
-                                                    <div id="printArea{{ $r->id }}">
-                                                        <div style="font-weight:600; margin-bottom:8px;">
-                                                            {{ $r->nama_ruang }}</div>
-                                                        {!! QrCode::size(180)->generate($url) !!}
-                                                        {{-- <div class="mt-2 small text-muted" style="word-break: break-all;">
-                                                            {{ $url }}</div> --}}
-                                                    </div>
-
-                                                    <div class="mt-3">
-                                                        <button type="button" class="btn btn-primary btn-sm"
-                                                            onclick="printArea('printArea{{ $r->id }}')">
-                                                            Print
-                                                        </button>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
                                 @endforeach
                             </tbody>
                         </table>
@@ -258,4 +148,118 @@
         </div>
     </div>
     
+    {{-- SEMUA MODAL DIPINDAHKAN KE BAWAH AGAR DATATABLES BERJALAN LANCAR --}}
+    @foreach ($ruang as $r)
+        {{-- Modal Delete --}}
+        @if(!$isReadOnly)
+        <div class="modal fade" id="konfirmDelete{{ $r->id }}" tabindex="-1"
+            role="dialog" aria-labelledby="{{ $r->id }}" aria-hidden="true">
+            <div class="modal-dialog modal- modal-dialog-centered modal-sm" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Konfirmasi</h5>
+                        <button type="button" class="close" data-dismiss="modal"
+                            aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body p-0">
+                        <div class="card bg-secondary border-0 mb-0">
+                            <div class="card-body px-lg-5 py-lg-5">
+                                <div class=" text-default mb-0">
+                                    Anda yakin ingin menghapus data ruang {{ $r->nama_ruang }} ?
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <form action="{{ route('ruang.destroy', $r->id) }}" method="POST">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit" class="btn btn-danger">Hapus</button>
+                        </form>
+                        <a href="button" class="btn btn-secondary"
+                            data-dismiss="modal">Batal</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        @endif
+
+        <div class="modal fade" id="inventaris{{ $r->id }}" data-backdrop="static"
+            data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel"
+            aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-sm">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title" id="staticBackdropLabel">Data Inventaris</h4>
+                        <button type="button" class="close" data-dismiss="modal"
+                            aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="container">
+                            <div>
+                                <h4>Ruangan : <span
+                                        class="text-muted">{{ $r->nama_ruang }}</span></h4>
+                                <h4>Pj Ruangan : <span class="text-muted">AMIN</span></h4>
+                                <h4>Tahun : <span class="text-muted">2024</span></h4>
+                            </div>
+
+                            <div class="my-4">
+                                <h4>Bulan</h4>
+                                <div class="row">
+                                    <div class="row">
+                                        @foreach ($bulanList as $bulan)
+                                            @php
+                                                $bulanSingkat = substr($bulan, 0, 3); // Mengambil tiga karakter pertama dari nama bulan
+                                            @endphp
+                                            <div class="col-md-4">
+                                                <a href="{{ route('inventaris.bulan', ['bulan' => $bulan, 'id_ruang' => $r->id]) }}"
+                                                    class="btn btn-success my-2 w-100">{{ $bulanSingkat }}</a>
+                                            </div>
+                                        @endforeach
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        {{-- Modal Barcode --}}
+        <div class="modal fade" id="barcode{{ $r->id }}" tabindex="-1"
+            role="dialog" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-sm" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">QR Ruangan: {{ $r->nama_ruang }}</h5>
+                        <button type="button" class="close"
+                            data-dismiss="modal"><span>&times;</span></button>
+                    </div>
+
+                    <div class="modal-body text-center">
+                        @php $url = route('scan.token', $r->id); @endphp
+
+                        <div id="printArea{{ $r->id }}">
+                            <div style="font-weight:600; margin-bottom:8px;">
+                                {{ $r->nama_ruang }}</div>
+                            {!! QrCode::size(180)->generate($url) !!}
+                            {{-- <div class="mt-2 small text-muted" style="word-break: break-all;">
+                                {{ $url }}</div> --}}
+                        </div>
+
+                        <div class="mt-3">
+                            <button type="button" class="btn btn-primary btn-sm"
+                                onclick="printArea('printArea{{ $r->id }}')">
+                                Print
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    @endforeach
 @endsection

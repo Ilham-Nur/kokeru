@@ -65,8 +65,7 @@
 @endsection
 
 @section('content')
-<!-- Page content -->
-    <div class="container-fluid mt--6">
+<div class="container-fluid mt--6">
       <div class="row">
         <div class="col">
           @if(session('success'))
@@ -86,18 +85,18 @@
             </div>
           @endif
           <div class="card pb-5">
-            <!-- Card header -->
-            <div class="card-header border-0">
+            <div class="card-header border-0 d-flex justify-content-between align-items-center">
               <h3 class="mb-0">Data CS</h3>
+              <a href="{{ route('manajer.cs.index', ['print' => 'pdf']) }}" class="btn btn-sm btn-danger" target="_blank">Print PDF</a>
             </div>
-            <!-- Light table -->
             <div class="table-responsive">
               <table class="table align-items-center table-flush" id="data">
                 <thead class="thead-light">
                   <tr>
-                    <th scope="col" class="sort" data-sort="name">ID <i class="fas fa-sort"></th>
-                    <th scope="col" class="sort">Nama<i class="fas fa-sort"></th>
-                    <th scope="col" class="sort">Email <i class="fas fa-sort"></th>
+                    <th scope="col" class="sort" data-sort="name">ID <i class="fas fa-sort"></i></th>
+                    <th scope="col" class="sort">Nama <i class="fas fa-sort"></i></th>
+                    <th scope="col" class="sort">Email <i class="fas fa-sort"></i></th>
+                    {{-- Kondisi Kolom Aksi di Header --}}
                     @if(!$isReadOnly)
                     <th scope="col" class="sort">Aksi</th>
                     @endif
@@ -109,42 +108,15 @@
                     <th scope="row">{{$r->id}}</th>
                     <td>{{$r->nama_user}}</td>
                     <td>{{$r->email}}</td>
+                    
+                    {{-- Kondisi Kolom Aksi di Body (WAJIB ADA BIAR GAK BELANG) --}}
+                    @if(!$isReadOnly)
                     <td>
-                      @if(!$isReadOnly)
                       <a class="btn btn-warning btn-sm" href="{{route('cs.edit', $r->id)}}">Edit</a>&nbsp;&nbsp; 
                       <a class="btn btn-danger btn-sm" href="#" data-toggle="modal" data-target="#konfirmDelete{{$r->id}}">Delete</a>
-                      @endif
                     </td>
+                    @endif
                   </tr>
-                  <div class="modal fade" id="konfirmDelete{{$r->id}}" tabindex="-1" role="dialog" aria-labelledby="{{$r->id}}" aria-hidden="true">
-                    <div class="modal-dialog modal- modal-dialog-centered modal-sm" role="document">
-                      <div class="modal-content">
-                        <div class="modal-header">
-                          <h5 class="modal-title" id="exampleModalLabel">Konfirmasi</h5>
-                          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                          </button>
-                        </div>
-                        <div class="modal-body p-0">
-                          <div class="card bg-secondary border-0 mb-0">
-                            <div class="card-body px-lg-5 py-lg-5">
-                              <div class=" text-default mb-0">
-                                Anda yakin ingin menghapus data cs {{$r->nama_user}} ?
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                        <div class="modal-footer">
-                          <form action="{{ route('cs.destroy',$r->id) }}" method="POST">
-                            @csrf
-                            @method('DELETE')
-                            <button type="submit" class="btn btn-danger">Hapus</button>
-                          </form>
-                          <a href="button" class="btn btn-secondary" data-dismiss="modal">Batal</a>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
                   @endforeach
                 </tbody>
               </table>
@@ -153,4 +125,39 @@
         </div>
       </div>
     </div>
+
+    {{-- MODAL DIKELUARKAN DARI DALAM TABEL --}}
+    @if(!$isReadOnly)
+        @foreach($cs as $r)
+            <div class="modal fade" id="konfirmDelete{{$r->id}}" tabindex="-1" role="dialog" aria-labelledby="{{$r->id}}" aria-hidden="true">
+                <div class="modal-dialog modal- modal-dialog-centered modal-sm" role="document">
+                    <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Konfirmasi</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body p-0">
+                        <div class="card bg-secondary border-0 mb-0">
+                        <div class="card-body px-lg-5 py-lg-5">
+                            <div class=" text-default mb-0">
+                            Anda yakin ingin menghapus data cs {{$r->nama_user}} ?
+                            </div>
+                        </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <form action="{{ route('cs.destroy',$r->id) }}" method="POST">
+                        @csrf
+                        @method('DELETE')
+                        <button type="submit" class="btn btn-danger">Hapus</button>
+                        </form>
+                        <a href="button" class="btn btn-secondary" data-dismiss="modal">Batal</a>
+                    </div>
+                    </div>
+                </div>
+            </div>
+        @endforeach
+    @endif
 @endsection
