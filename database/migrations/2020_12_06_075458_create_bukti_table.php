@@ -17,7 +17,8 @@ class CreateBuktiTable extends Migration
             $table->id();
             $table->foreignId('id_laporan'); // atau unsignedBigInteger tergantung settinganmu
             $table->string('nama_file');
-            $table->text('deskripsi')->nullable(); 
+            $table->text('deskripsi')->nullable();
+            $table->timestamps();
         });
     }
 
