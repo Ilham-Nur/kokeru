@@ -13,6 +13,63 @@
     });
 </script>
 
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var sidenav = document.getElementById('sidenav-main');
+        if (!sidenav) {
+            return;
+        }
+
+        var toggles = document.querySelectorAll('[data-action="sidenav-pin"][data-target="#sidenav-main"]');
+        var backdrop = document.createElement('div');
+        backdrop.className = 'mobile-sidenav-backdrop';
+        document.body.appendChild(backdrop);
+
+        function isMobileView() {
+            return window.innerWidth < 1200;
+        }
+
+        function closeMobileSidenav() {
+            document.body.classList.remove('mobile-sidenav-open');
+        }
+
+        function openMobileSidenav() {
+            document.body.classList.add('mobile-sidenav-open');
+        }
+
+        function toggleMobileSidenav(event) {
+            if (!isMobileView()) {
+                return;
+            }
+
+            if (event) {
+                event.preventDefault();
+                event.stopPropagation();
+            }
+
+            if (document.body.classList.contains('mobile-sidenav-open')) {
+                closeMobileSidenav();
+                return;
+            }
+
+            openMobileSidenav();
+        }
+
+        toggles.forEach(function(toggle) {
+            toggle.addEventListener('click', toggleMobileSidenav);
+        });
+
+        backdrop.addEventListener('click', closeMobileSidenav);
+
+        window.addEventListener('resize', function() {
+            if (!isMobileView()) {
+                closeMobileSidenav();
+            }
+        });
+    });
+</script>
+
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         const passNew = document.getElementById('password_new');

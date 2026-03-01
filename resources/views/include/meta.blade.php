@@ -17,3 +17,32 @@
 <script src="{{ asset('assets/js/jquery.zoom.js')}}"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js" integrity="sha512-hZf9Qhp3rlDJBvAKvmiG+goaaKRZA6LKUO35oK6EsM0/kjPK32Yw7URqrq3Q+Nvbbt8Usss+IekL7CRn83dYmw==" crossorigin="anonymous"></script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.css" integrity="sha512-C7hOmCgGzihKXzyPU/z4nv97W0d9bv4ALuuEbSf6hm93myico9qa0hv4dODThvCsqQUmKmLcJmlpRmCaApr83g==" crossorigin="anonymous" />
+
+<style>
+  @media (max-width: 1199.98px) {
+    #sidenav-main {
+      transform: translateX(-100%);
+      transition: transform 0.25s ease;
+      z-index: 1050;
+    }
+
+    body.mobile-sidenav-open #sidenav-main {
+      transform: translateX(0);
+    }
+
+    .mobile-sidenav-backdrop {
+      position: fixed;
+      inset: 0;
+      z-index: 1040;
+      background-color: rgba(0, 0, 0, 0.4);
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.25s ease;
+    }
+
+    body.mobile-sidenav-open .mobile-sidenav-backdrop {
+      opacity: 1;
+      visibility: visible;
+    }
+  }
+</style>
