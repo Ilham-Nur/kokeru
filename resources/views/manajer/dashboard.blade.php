@@ -208,6 +208,18 @@
                                                                                                         </div>
                                                                                                     @endif
                                                                                                 @endforeach
+                                                                                                 <div class="mt-2">
+                                                                                                    <div class="card shadow-sm">
+                                                                                                        <div class="card-body p-2">
+                                                                                                            <small class="text-muted d-block mb-1">
+                                                                                                                <i class="fas fa-align-left"></i> Deskripsi
+                                                                                                            </small>
+                                                                                                            <p class="mb-0" style="font-size:14px;">
+                                                                                                                {{ $b->deskripsi ?? '-' }}
+                                                                                                            </p>
+                                                                                                        </div>
+                                                                                                    </div>
+                                                                                                </div>
                                                                                             </div>
                                                                                         </div>
                                                                                     </div>
