@@ -64,17 +64,14 @@
 
     <table style="width:100%; border:none; margin-top:30px;">
         <tr>
+            <td style="width:50%; border:none;">
+            </td>
+
             <td style="width:50%; border:none; text-align:center;">
-                Batam, {{date('d F Y')}}<br>
+                Batam, {{ date('d F Y') }}<br>
                 <strong>Ka. Bid Sarpras</strong><br><br><br><br><br>
                 <u style="letter-spacing:2px;">_________________________</u><br>
                 Nup. _______________
-            </td>
-            <td style="width:50%; border:none; text-align:center;">
-                Batam, {{date('d F Y')}}<br>
-                <strong>Manajer</strong><br><br><br><br><br>
-                <u>{{Auth::user()->nama_user}}</u><br>
-                Manajer
             </td>
         </tr>
     </table>

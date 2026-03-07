@@ -52,36 +52,48 @@
         </tr>
     </table>
 
-    <table class="table">
-        <tr>
-            <th class="center" style="width:10%">No</th>
-            <th class="center" style="width:30%">Ruang</th>
-            <th style="width:60%">Nama CS</th>
-        </tr>
-        <?php $i = 1;?>
-        @foreach($jadwal as $r)
+   <table class="table">
             <tr>
-                <td class="center">{{$i}}</td>
-                <td class="center">{{$r->nama_ruang}}</td>
-                <td>{{$r->nama_user}}</td>
+                <th class="center" style="width:10%">No</th>
+                <th style="width:40%">Nama CS</th>
+                <th class="center" style="width:50%">Ruang</th>
             </tr>
-            <?php $i++; ?>
+
+        @php
+        $i = 1;
+        $grouped = $jadwal->groupBy('nama_user');
+        @endphp
+
+        @foreach($grouped as $nama_user => $rows)
+
+            @foreach($rows as $index => $r)
+                <tr>
+
+                    @if($index == 0)
+                        <td class="center" rowspan="{{ $rows->count() }}">{{ $i }}</td>
+                        <td rowspan="{{ $rows->count() }}">{{ $nama_user }}</td>
+                    @endif
+
+                    <td class="center">{{ $r->nama_ruang }}</td>
+
+                </tr>
+            @endforeach
+
+        @php $i++; @endphp
+
         @endforeach
     </table>
 
-    <table style="width:100%; border:none; margin-top:30px;">
+   <table style="width:100%; border:none; margin-top:30px;">
         <tr>
+            <td style="width:50%; border:none;">
+            </td>
+
             <td style="width:50%; border:none; text-align:center;">
-                Batam, {{date('d F Y')}}<br>
+                Batam, {{ date('d F Y') }}<br>
                 <strong>Ka. Bid Sarpras</strong><br><br><br><br><br>
                 <u style="letter-spacing:2px;">_________________________</u><br>
                 Nup. _______________
-            </td>
-            <td style="width:50%; border:none; text-align:center;">
-                Batam, {{date('d F Y')}}<br>
-                <strong>Manajer</strong><br><br><br><br><br>
-                <u>{{Auth::user()->nama_user}}</u><br>
-                Manajer
             </td>
         </tr>
     </table>
